@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="logout-btn">
+        <form action="{% url 'sign-out' %}" method="post">
+            {% csrf_token %}
+            <button class="opacity-8" type="submit"><i class="fa fa-sign-in margin-right-1"></i>Sign-Out</button>
+        </form>
+    </div>
+    <h1>My ACCOUNT</h1>
+{% endblock content %}

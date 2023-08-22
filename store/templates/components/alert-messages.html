@@ -1,0 +1,23 @@
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert-message {{ message.tags }}">
+            <p>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                    Error: {{ message }}
+                {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                    {{ message }}
+                {% endif %}
+            </p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %} 
+            <div class="alert-message error">
+                <p>Error: {{ error }}</p>
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}

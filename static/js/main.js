@@ -1,31 +1,3 @@
-// MOBILE NAV TOGGLE
-const mobile_nav = document.getElementById('mobile-nav');
-const nav_overlay = document.getElementById('nav-overlay');
-const body = document.querySelector('body');
-
-if(document.getElementById('hamburger-icon')) {
-    const clickOff = () => {
-        nav_overlay.style.display = 'none';
-        mobile_nav.style.width = '0%';
-        body.style.overflow = 'auto';
-    };
-    document.getElementById('hamburger-icon').addEventListener('click', () => {
-        if(mobile_nav.style.width === '300px') {
-            clickOff();
-        }else {
-            mobile_nav.style.width = '300px';
-            nav_overlay.style.display = 'flex';
-            body.style.overflow = 'hidden';
-        }
-    });
-    nav_overlay.addEventListener('click', (e) => {
-        if(e.target == nav_overlay) {
-            clickOff();
-        }
-    });
-}
-
-
 // CART
 const getToken = (name) => {
     let cookieValue = null;
@@ -117,6 +89,17 @@ if(document.querySelector('.update-cart')) {
 }
 
 
+// ALERT MESSAGES
+if(document.querySelector('.alert-message')) {
+    const alertMessages = document.querySelectorAll('.alert-message');
+    alertMessages.forEach((message) => {
+        message.classList.add('fade-out');
+        setTimeout(() => {
+            message.remove();
+        }, 5000);
+    });
+}
+
 // ANIMATIONS
 const scrollElements = document.querySelectorAll('.js-scroll');
 const elementInView = (el, dividend = 1) => {
@@ -149,3 +132,20 @@ const handleScrollAnimation = () => {
 window.addEventListener('scroll', () => { 
 	handleScrollAnimation();
 });
+
+
+// CHATBOX
+if(document.querySelector('#open-popup')) {
+    const openPU = document.getElementById('open-popup');
+    const chatPU = document.getElementById('chat-popup');
+    const closePU = document.getElementById('close-popup');
+
+    openPU.addEventListener('click', () => {
+        chatPU.style.display = 'flex';
+        openPU.style.display = 'none';
+    });
+    closePU.addEventListener('click', () => {
+        chatPU.style.display = 'none';
+        openPU.style.display = 'flex';
+    });
+}

@@ -5,9 +5,16 @@ from django.contrib.auth.models import User
 
 class Customer(models.Model):
 	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-	name = models.CharField(max_length=200, null=True)
+	first_name = models.CharField(max_length=200, null=True)
+	last_name = models.CharField(max_length=200, null=True)
+	username = models.CharField(max_length=20, null=True)
 	email = models.CharField(max_length=200, null=True)
 
+	@property
+	def name(self):
+		name = self.first_name + ' ' + self.last_name
+		return name
+	
 	def __str__(self):
 		return self.name
 
@@ -84,3 +91,21 @@ class ShippingAddress(models.Model):
 
 	def __str__(self):
 		return self.address
+	
+
+class Banner(models.Model):
+	name = image_description = models.CharField(max_length=20, null=True)
+	text = models.CharField(max_length=200, null=True)
+	image = models.ImageField(null=True, blank=True)
+	image_description = models.CharField(max_length=100, null=True)
+
+	def __str__(self):
+		return self.name
+	
+	@property
+	def imageURL(self):
+		try:
+			url = self.image.url
+		except:
+			url = ''
+		return url

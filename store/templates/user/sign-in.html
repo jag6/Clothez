@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block canonical %}/sign-in{% endblock %}
+
+{% block description %}Sign in and do what you came to do.{% endblock %}
+
+{% block twitter_title %}Welcome Back{% endblock %}
+{% block twitter_description %}Sign in and do what you came to do.{% endblock %}
+
+{% block meta_title %}Welcome Back{% endblock %}
+{% block meta_description %}Sign in and do what you came to do.{% endblock %}
+{% block meta_url %}/sign-in{% endblock %}
+
+{% block title %}Welcome Back - Clothez{% endblock %}
+
+{% block content %}
+    <section class="form-container box-shadow">
+        <section>
+            <h1><span><i class="fa fa-sign-in"></i></span>Welcome Back!</h1>
+        </section>
+        <form action="{% url 'sign-in' %}" method="post" class="form">
+            {% include 'components/alert-messages.html' %}
+            <div class="alert-message success">
+                
+                <p>test</p>
+            </div>
+            {% csrf_token %}
+            <div class="form-field">
+                <label for="username">Username</label>
+                <input type="username" name="username" id="username" value="{{ form.username.value | default_if_none:'' }}">
+            </div>
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" value="{{ form.password.value | default_if_none:'' }}">
+            </div>
+            <button aria-label="Login Button" type="submit" class="primary">SIGN IN</button>
+            <div class="form-links">
+                <p>Don't have an account?</p><a href="{% url 'sign-up' %}"><span>Sign Up</span></a>
+            </div>
+        </form>
+    </section>
+{% endblock content %}

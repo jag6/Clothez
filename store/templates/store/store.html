@@ -2,19 +2,35 @@
 {% load static %}
 
 {% block content %}
-    <div class="row">
-        {% for product in products %}
-            <div class="col-lg-4">
-                <img class="thumbnail" src="{{product.imageURL}}" alt="">
-                <div class="box-element product">
-                    <h6><strong>{{product.name}}</strong></h6>
-                    <hr>
-                    <button data-product="{{product.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
-                    <a class="btn btn-outline-success" href="#">View</a>
-                    <h4 style="display: inline-block; float: right"><strong>${{product.price|floatformat:2}}</strong></h4>
-                </div>
+    {% for i in banner%}
+        <section class="banner">
+            <div>
+                <img src="{{i.imageURL}}" alt="{{i.image_description}}">
             </div>
-        {% endfor %}
-    </div>
+            <section class="text">
+                <h1>{{i.text}}</h1>
+            </section>
+        </section>
+    {% endfor %}
+    <section class="listings-container">
+        <ul class="listings">
+            {% for product in products %}
+                <li>
+                    <a href="/" target="_blank" class="listing box-shadow">                        
+                        <div class="listing-img">
+                            <img src="{{product.imageURL}}" alt="">
+                        </div> 
+                        <section class="listing-name">
+                            <h4>{{product.name}}</h4> 
+                        </section>
+                        <div class="listing-price">
+                            <p>${{product.price|floatformat:2}}</p>
+                        </div>
+                    </a>
+                    <button data-product="{{product.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
 
 {% endblock content %}

@@ -1,33 +1,60 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.contrib import messages, auth
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 import json
 import datetime
-from .models import * 
+from .models import *
+from .forms import * 
 from .utils import cookieCart, cartData, guestOrder
 
 def store(request):
-	data = cartData(request)
+	# metadata
+	title = 'Your #1 Online Store'
+	description = 'Your number one stop for all of life\'s essentials.'
 
+	# banner
+	banner = Banner.objects.filter(name = 'Home Banner')
+
+	# cart
+	data = cartData(request)
 	cartItems = data['cartItems']
 	order = data['order']
 	items = data['items']
 
+	# products
 	products = Product.objects.all()
+
 	context = {
+		'title': title,
+		'description': description,
+		'banner': banner,
+		'cartItems': cartItems,
 		'products': products, 
-		'cartItems': cartItems
 	}
 	return render(request, 'store/store.html', context)
 
+def search(request):
+	return render(request, 'store/search.html')
+
+def wishList(request):
+	return render(request, 'store/wishlist.html')
 
 def cart(request):
-	data = cartData(request)
+	# metadata
+	title = 'Shopping Cart'
+	description = 'View or change items in cart.'
 
+	# cart
+	data = cartData(request)
 	cartItems = data['cartItems']
 	order = data['order']
 	items = data['items']
 
 	context = {
+		'title': title,
+		'description': description,
 		'items': items, 
 		'order': order, 
 		'cartItems': cartItems
@@ -35,6 +62,11 @@ def cart(request):
 	return render(request, 'store/cart.html', context)
 
 def checkout(request):
+	# metadata
+	title = 'Checkout'
+	description = 'Pay with PayPal.'
+
+	#cart
 	data = cartData(request)
 	if not data['cartItems']:
 		return redirect('/')
@@ -44,6 +76,8 @@ def checkout(request):
 	items = data['items']
 
 	context = {
+		'title': title,
+		'description': description,
 		'items': items, 
 		'order': order, 
 		'cartItems': cartItems
@@ -106,3 +140,49 @@ def processOrder(request):
 			)
 
 		return JsonResponse('Payment submitted..', safe=False)
+	
+def signUp(request):
+	if request.method == 'GET':
+		form = SignUpForm()
+
+		return render(request, 'user/sign-up.html', {'form': form})
+	
+	if request.method == 'POST':
+		form = SignUpForm(request.POST)
+		if form.is_valid():
+			user = User.objects.create_user(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+			user.save()
+			messages.success(request, 'Sign-up successful. Please sign-in.')
+			return redirect('sign-in')
+		else:
+			form.errors
+			return render(request, 'user/sign-up.html', {'form': form})
+
+def signIn(request):
+	if request.method == 'GET':
+		form = SignInForm()
+		return render(request, 'user/sign-in.html', {'form': form})
+	
+	if request.method == 'POST':
+		form = SignInForm(request.POST)
+		if form.is_valid():
+			user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+			if user is None:
+				messages.error(request, 'Invalid credentials, please try again')
+				return render(request, 'accounts/login.html')  
+			else:
+				auth.login(request, user)
+				return redirect('my-account')
+		else:
+			form.errors
+			return render(request, 'user/sign-in.html', {'form': form})
+
+@login_required
+def myAccount(request):
+	return render(request, 'user/my-account.html')
+
+def signOut(request):
+    if request.method == 'POST':
+        auth.logout(request)
+        messages.success(request, 'Logout Successful')
+        return redirect('sign-in')

@@ -22,26 +22,26 @@
                             <p>Shipping Information:</p>
                             <hr>
                             <div class="form-field">
-                                <input class="form-control" type="text" name="address" placeholder="Address..">
+                                <input required class="form-control" type="text" name="address" placeholder="Address..">
                             </div>
                             <div class="form-field">
-                                <input class="form-control" type="text" name="city" placeholder="City..">
+                                <input required class="form-control" type="text" name="city" placeholder="City..">
                             </div>
                             <div class="form-field">
-                                <input class="form-control" type="text" name="state" placeholder="State..">
+                                <input required class="form-control" type="text" name="state" placeholder="State..">
                             </div>
                             <div class="form-field">
-                                <input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+                                <input required class="form-control" type="text" name="zipcode" placeholder="Zip code..">
                             </div>
                         </div>
                     {% endif %}
                     <hr>
-                    <input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+                    <input required id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
                 </form>
                 <br>
                 <div class="box-element hidden" id="payment-info">
                     <small>Paypal Options</small>
-                    <button id="make-payment">Make Payment</button>
+                    <div id="paypal-button-container"></div>
                 </div>
             </div>
         </div>
@@ -64,9 +64,32 @@
             </div>
         </div>
     </div>
+    <script src="https://www.paypal.com/sdk/js?client-id=AS6gKGXYE3UOk1dqjCOPbZHREsRJJ6Z80ghEY8JRkoT2pSmvl75PhYK3aS6OUPXBnO_1ifAwm-YxijMQ&currency=USD" type="text/javascript"></script>
+    <script type="text/javascript">
+        const total = '{{order.get_cart_total}}';
+
+        paypal.Buttons({
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: parseFloat(total).toFixed(2)
+                        }
+                    }]
+                });
+            },
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Show a success message to the buyer
+                    submitFormData();
+                });
+            }
+        }).render('#paypal-button-container');
+    </script>
     <script type="text/javascript">
         const shipping = '{{order.shipping}}';
-        const total = '{{order.get_cart_total}}';
 
         const form = document.getElementById('form');
         form.addEventListener('submit', (e) => {
@@ -75,7 +98,7 @@
             document.getElementById('payment-info').classList.remove('hidden');
         });
 
-        document.getElementById('make-payment').addEventListener('click', (e) => {
+        const submitFormData = () => {
             let userFormData = {
                 'name': null,
                 'email': null,
@@ -113,6 +136,7 @@
                         body: JSON.stringify({'form': userFormData, 'shipping': shippingInfo})
                         })
                         if(!response.ok) {
+                            alert('Sorry, there\'s been an error. Please try again.');
                             throw new Error(`${response.status}`);
                         }
                         await response.json();
@@ -127,6 +151,6 @@
                 }
             }
             makePayment();
-        });
+        };
     </script>
 {% endblock content %}

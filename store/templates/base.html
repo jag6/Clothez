@@ -2,50 +2,131 @@
 {% load static %}
 <html lang="en">
 <head>
+    <!-- Metadata First -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCommerce</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Title -->
+    <title>{% block title %}{{ title }} - Clothez{% endblock %}</title>
+    {% if banner_img %}
+         <!-- Preload -->
+         <link rel="preload" href="{% static 'images/' %}{{ banner_img }}" as="image">
+     {% endif %}
+    <!-- CSS + Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://clothezrfw.online{% block canonical %}{{ url }}{% endblock %}">
+    <!-- Metadata -->
+    <meta name="description" content="{% block description %}{{ description }}{% endblock %}">
+    <meta name="format-detection" content="telephone=no">
+    <!-- Twitter Metadata -->
+    <meta name="twitter:title" content="{% block twitter_title %}{{ title }}{% endblock twitter_title %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ description }}{% endblock %}">
+    <meta name="twitter:image" content="{% static 'images/' %}{% block twitter_image %}{{ image }}{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Other Social Media Metadata -->
+    <meta property="og:title" content="{% block meta_title %}{{ title }}{% endblock %}">
+    <meta property="og:description" content="{% block meta_description %}{{ description }}{% endblock %}">
+    <meta property="og:image" content="{% static 'images/' %}{% block meta_image %}{{ image }}{% endblock %}">
+    <meta property="og:url" content="https://clothezrfw.online{% block meta_url %}{{ url }}{% endblock %}">
+    <meta property="og:site_name" content="Clothez">
+    <!--Scripts -->
     <script src="{% static 'js/main.js' %}" defer></script>
-    <script type="text/javascript" defer>
+    <script type="text/javascript">
         const user = '{{request.user}}';
     </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{% url 'store' %}">Ecom</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'store' %}">Store<span class="sr-only">(current)</span></a>
-                </li>
-          </ul>
-            <div class="form-inline my-2 my-lg-0">
-                {% if user.is_authenticated %}
-                    <a href="#"class="btn btn-warning">My Account</a>
-                {% else %}
-                    <a href="#"class="btn btn-warning">Login</a>
-                {% endif %}
-                <a href="{% url 'cart' %}">
-                    <img id="cart-icon" src="{% static 'images/cart.png' %}">
-                </a>
-                <p id="cart-total">{{cartItems}}</p>
+    <header>
+        <nav class="nav">
+            <a href="{% url 'store' %}">
+                <div class="brand">
+                    <span><i class="fa-brands fa-cotton-bureau"></i></span>
+                    <p>Clothez</p>
+                </div>
+            </a>
+            <div class="search">
+                <button type="button" aria-label="Sidebar Open Button" class="sidebar-open-btn">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+                <form action="{% url 'search' %}" method="get" class="search-form">
+                    <input type="text" name="q" placeholder="Search...">
+                <button type="submit" aria-label="Search Button"><i class="fa fa-search"></i></button>
+                </form>
             </div>
+            <div id="user-links" class="user-links {% if not user.is_authenticated %} ul-guest {% endif %}">
+                <ul>
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'my-account' %}">
+                                <div class='header-cf'>
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'sign-up' %}">SIGN-UP</a></li>
+                        <li><a href="{% url 'sign-in' %}">SIGN-IN</a></li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url 'wishlist' %}">
+                            <div class='header-cf'>
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'cart' %}">
+                            <div class='header-cf'>
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <p id="cart-total">{{cartItems}}</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="search-m">
+            <button type="submit" aria-label="Sidebar Open Button" id="sidebar-open-btn" class="sidebar-open-btn">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+            <form class="search-form">
+                <input type="text" name="q" placeholder="Search...">
+                <button type="submit" aria-label="Search Button"><i class="fa fa-search"></i></button>
+            </form>
         </div>
-    </nav>
-    <div class="container">
+    </header>
+    <main>
         {% block content %}
         
         {% endblock content %}
+    </main>
+    <button class="open-popup" id="open-popup"><i class="fas fa-phone"></i></button>
+    <div id="chat-popup" class="chat-popup">
+        <ul class="contact-icons">
+            <li><a href=""><i class="fas fa-phone"></i></a></li>
+            <li><a href=""><i class="fas fa-envelope"></i></a></li>
+            <li><a href=""><i class="fab fa-instagram"></i></a></li>
+            <li><a href=""><i class="fab fa-facebook"></i></a></li>
+            <li><a href=""><i class="fab fa-twitter"></i></a></li>
+            <li><a href=""><i class="fab fa-discord"></i></a></li>
+        </ul>
+        <button type="button" class="chat-cancel" id="close-popup">CLOSE</button>
     </div>
+    <footer>
+        <div><p>Clothez&copy; 2023</p></div>
+        <nav class="nav">
+            <ul class="page-links">
+                <li><a href="/about">ABOUT</a></li>
+                <li><a href="/contact">CONTACT</a></li>
+                <li><a href="/privacy-policy">PRIVACY POLICY</a></li>
+            </ul>
+        </nav>
+    </footer>
 </body>
 </html>
