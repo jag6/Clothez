@@ -1,0 +1,166 @@
+/*CHECKOUT*/
+
+.checkout-steps {
+    display: flex;
+    justify-content: space-between;
+    max-width: 50rem;
+    margin: 1rem auto;
+    text-align: center;
+    font-weight: 700;
+}
+
+.checkout-steps > div {
+    border-top: .3rem #c0c0c0 solid;
+    color: #c0c0c0;
+    flex: 1 1;
+    padding-top: 1rem;
+}
+
+.checkout-steps > div.active {
+    color: #F27430;
+    border-top-color: #F27430; 
+}
+
+
+/*PAYMENT*/
+
+#payment-form div {
+    margin-top: 1rem;
+    align-items: center;
+}
+
+#payment-form img {
+    width: auto;
+    height: auto;
+    margin-left: 4px;
+}
+
+#payment-form img:first-of-type {
+    margin-right: 4px;
+}
+
+#payment-form label {
+    display: none;
+}
+
+
+/*PLACE ORDER*/ 
+
+.order {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem 1%;
+}
+
+.order-info {
+    flex: 3 1 60rem;
+}
+
+.shipping-info, .payment-info {
+    background-color: #fff;
+    padding: 1rem 2%;
+    margin-bottom: 1rem;
+    margin-right: 2%;
+    flex: 3 1 60rem;
+}
+
+.shipping-info div:first-child, .payment-info div:first-child {
+    margin-bottom: 1rem;
+}
+
+.order-action {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 20rem;
+    background-color: #fff;
+    padding: 2rem 2%;
+}
+
+.order-action-header {
+    margin-bottom: 2rem;
+}
+
+.place-order-info div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-top: 1px solid #c0c0c0;
+    justify-content: space-between;
+}
+
+.place-order-info div:last-child {
+    border-top: none;
+}
+
+.order-action h3 {
+    font-size: 20px;
+    line-height: 48px;
+    font-weight: 400;
+}
+
+#last-h3, #last-h3-2 {
+    font-size: 24px;
+    line-height: 48px;
+    font-weight: 900;
+    color: #F26518;
+}
+
+.place-order-info button {
+    margin-top: 2rem;
+    font-weight: 700;
+}
+
+.order-header {
+    padding: 2rem 1%;
+}
+
+.order-header h1 {
+    font-size: 40px;
+    line-height: 64px;
+    text-align: center;
+}
+
+.shipping-info p, .payment-info p {
+    font-size: 20px;
+    line-height: 32px;
+}
+
+.order-header {
+    background-color: #fff;
+    margin: 0 1%;
+}
+
+
+@media only screen and (max-width: 991px) {   
+   .order {
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        padding: 2rem 2%;
+    }
+
+    .order-header {
+        margin: 0 2%;
+        padding: 2rem 2%;
+    }
+
+    .order-info, .order-action, .shipping-info, .payment-info {
+        flex: 100%;
+        width: 100%;
+        margin-right: 0%;
+    }
+
+    .order-action {
+        margin-top: 3rem;
+        padding: 2rem 3% 2rem 3%;
+    }
+}
+
+@media only screen and (max-width: 576px) {   
+    .smaller {
+        font-size: 24px;
+        line-height: 64px;
+    }
+}

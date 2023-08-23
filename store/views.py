@@ -1,15 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
 import json
 import datetime
-from .models import *
-from .forms import * 
+from . models import *
+from . forms import * 
+from . options import price_options
 from .utils import cookieCart, cartData, guestOrder
 
-def store(request):
+def index(request):
 	# metadata
 	title = 'Your #1 Online Store'
 	description = 'Your number one stop for all of life\'s essentials.'
@@ -20,8 +20,6 @@ def store(request):
 	# cart
 	data = cartData(request)
 	cartItems = data['cartItems']
-	order = data['order']
-	items = data['items']
 
 	# products
 	products = Product.objects.all()
@@ -33,18 +31,90 @@ def store(request):
 		'cartItems': cartItems,
 		'products': products, 
 	}
-	return render(request, 'store/store.html', context)
+	return render(request, 'store/index.html', context)
 
 def search(request):
-	return render(request, 'store/search.html')
+	# metadata
+	title = 'Search'
+	description = 'Search for the product you\'re looking for.'
+	url = '/search'
 
-def wishList(request):
-	return render(request, 'store/wishlist.html')
+	# cart
+	data = cartData(request)
+	cartItems = data['cartItems']
+
+	#search info
+	queryset_list = Product.objects.order_by('-name')
+
+	if 'q' in request.GET:
+		q = request.GET['q']
+		if q:
+			queryset_list = queryset_list.filter(name__icontains = q)
+	
+	# if 'price' in request.GET:
+	# 	price = price.GET['price']
+	# 	if price:
+	# 		queryset_list = queryset_list.filter(price__lte = price)
+
+	context = {
+		'title': title,
+		'description': description,
+		'url': url,
+		'cartItems': cartItems,
+		'products': queryset_list,
+		'values': request.GET,
+		'price_options': price_options
+	}
+
+	return render(request, 'store/search.html', context)
+
+def product(request, product_id):
+	# metadata
+	url = '/'
+	css = 'product'
+
+	# cart
+	data = cartData(request)
+	cartItems = data['cartItems']
+
+	product = get_object_or_404(Product, pk = product_id)
+
+	context = {
+		'css': css,
+		'url': url,
+		'product': product,
+		'cartItems': cartItems
+	}
+
+	return render(request, 'store/product.html', context)
+
+def wishlist(request):
+	# metadata
+	title = 'Wishlist'
+	description = 'View or change items in wishlist.'
+	url = '/wishlist'
+	css = 'cart'
+
+	# cart
+	data = cartData(request)
+	cartItems = data['cartItems']
+
+	context = {
+		'title': title,
+		'description': description,
+		'url': url,
+		'css': css,
+		'cartItems': cartItems
+	}
+
+	return render(request, 'store/wishlist.html', context)
 
 def cart(request):
 	# metadata
 	title = 'Shopping Cart'
 	description = 'View or change items in cart.'
+	url = '/cart'
+	css = 'cart'
 
 	# cart
 	data = cartData(request)
@@ -55,6 +125,8 @@ def cart(request):
 	context = {
 		'title': title,
 		'description': description,
+		'url': url,
+		'css': css,
 		'items': items, 
 		'order': order, 
 		'cartItems': cartItems
@@ -65,6 +137,8 @@ def checkout(request):
 	# metadata
 	title = 'Checkout'
 	description = 'Pay with PayPal.'
+	url = '/checkout'
+	css = 'checkout'
 
 	#cart
 	data = cartData(request)
@@ -78,6 +152,8 @@ def checkout(request):
 	context = {
 		'title': title,
 		'description': description,
+		'url': url,
+		'css': css,
 		'items': items, 
 		'order': order, 
 		'cartItems': cartItems
@@ -141,30 +217,64 @@ def processOrder(request):
 
 		return JsonResponse('Payment submitted..', safe=False)
 	
+
 def signUp(request):
+	# redirect signed-in users
+	if request.user.is_authenticated:
+		return redirect('my-account')
+	
 	if request.method == 'GET':
 		form = SignUpForm()
 
-		return render(request, 'user/sign-up.html', {'form': form})
+		# cart
+		data = cartData(request)
+		cartItems = data['cartItems']
+
+		return render(request, 'user/sign-up.html', {'form': form, 'cartItems': cartItems})
 	
 	if request.method == 'POST':
 		form = SignUpForm(request.POST)
+
+		# cart
+		data = cartData(request)
+		cartItems = data['cartItems']
+
 		if form.is_valid():
+			#save new user
 			user = User.objects.create_user(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 			user.save()
+			
+			#save user as customer
+			customer = Customer.objects.create(user=user, first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], username=form.cleaned_data['username'])
+			customer.save()
+
 			messages.success(request, 'Sign-up successful. Please sign-in.')
 			return redirect('sign-in')
 		else:
 			form.errors
-			return render(request, 'user/sign-up.html', {'form': form})
+			return render(request, 'user/sign-up.html', {'form': form, 'cartItems': cartItems})
 
 def signIn(request):
+	# redirect signed-in users
+	if request.user.is_authenticated:
+		return redirect('my-account')
+	
 	if request.method == 'GET':
 		form = SignInForm()
-		return render(request, 'user/sign-in.html', {'form': form})
+
+		# cart
+		data = cartData(request)
+		cartItems = data['cartItems']
+
+		return render(request, 'user/sign-in.html', {'form': form, 'cartItems': cartItems})
 	
 	if request.method == 'POST':
 		form = SignInForm(request.POST)
+
+		# cart
+		data = cartData(request)
+		cartItems = data['cartItems']
+
 		if form.is_valid():
 			user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 			if user is None:
@@ -175,11 +285,29 @@ def signIn(request):
 				return redirect('my-account')
 		else:
 			form.errors
-			return render(request, 'user/sign-in.html', {'form': form})
+			return render(request, 'user/sign-in.html', {'form': form, 'cartItems': cartItems})
 
-@login_required
 def myAccount(request):
-	return render(request, 'user/my-account.html')
+	if not request.user.is_authenticated:
+		return redirect('sign-in')
+	
+	# metadata
+	title = 'My Account'
+	description = 'View previous orders or change account information.'
+	url = '/my-account'
+
+	# cart
+	data = cartData(request)
+	cartItems = data['cartItems']
+
+	context = {
+		'title': title,
+		'description': description,
+		'url': url,
+		'cartItems': cartItems
+	}
+		
+	return render(request, 'user/my-account.html', context)
 
 def signOut(request):
     if request.method == 'POST':

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load markdownify %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block canonical %}{{ url }}{{ product.id }}{% endblock %}
+
+{% block description %}{{ product.description }}{% endblock %}
+
+{% block twitter_title %}{{ product.name }}{% endblock %}
+{% block twitter_description %}product{% endblock %}
+{% block twitter_image %}{{ product.imageURL }}{% endblock %}
+
+{% block meta_title %}{{ product.name }}{% endblock %}
+{% block meta_description %}{{ product.description }}{% endblock %}
+{% block meta_image %}{{ product.imageURL }}{% endblock %}
+{% block meta_url %}{{ url }}{{ product.id }}{% endblock %}
+
+{% block content %}
+    <section class="product-container">
+        <section class="details">
+            <section class="img-info">
+                <div class="details-img">
+                    <img class="product-img" src="{{ product.imageURL }}" alt="{{ product.name }}">
+                </div>
+                <section class="details-info">
+                    <section>
+                        <h1 class="product-name">{{ product.name }}</h1>
+                    </section>
+                    {% include 'components/product-rating.html' %}
+                    <section>
+                        <h2 class="product-price">Price: ${{ product.price|floatformat:2 }}</h2>
+                    </section>
+                    <section>
+                        <section><h2>Description:</h2></section>
+                        <div>
+                            {{ product.description | markdownify }}
+                        </div>
+                    </section>
+                </section>
+            </section>
+            <div class="details-action box-shadow">
+                <div><p>Price: ${{ product.price|floatformat:2 }}</p></div>
+                <div>
+                    <p>Status: {% if product.count_in_stock > 0 %}
+                            <span class="success-text">In Stock</span>   
+                        {% else %}
+                            <span class="error-text">Unavailable</span>
+                        {% endif %}
+                    </p>
+                </div>
+                {% if product.count_in_stock > 0 %}
+                    <div>
+                        <button data-product="{{product.id}}" data-action="add" class="fw primary bold update-cart">ADD TO CART</button>
+                    </div>
+                {% endif %}
+                <div>
+                    <button data-product="{{product.id}}" data-action="add" class="fw primary bold">ADD TO WISHLIST</button>
+                </div>
+            </div>
+        </section>
+        <section id="reviews-container" class="reviews-container">
+            {% if user.is_authenticated %}
+                <section id="review-box" class="form-container box-shadow">
+                    <section><h2><span><i class="fa-solid fa-pen-to-square"></i></span>Write a Review</h2></section>
+                    <form action="" method="post" id="review-form" class="form review-form">
+                        <label for="rating">Rating</label>
+                        <select required name="rating" id="rating">
+                            <option value="">Select</option>
+                            <option value="1">1 = Poor</option>
+                            <option value="2">2 = Fair</option>
+                            <option value="3">3 = Good</option>
+                            <option value="4">4 = Very Good</option>
+                            <option value="5">5 = Excellent</option>
+                        </select>
+                        <label for="comment">Comment</label>
+                        <textarea required name="comment" id="comment" cols="30" rows="5"></textarea>
+                        <button type="submit" class="primary bold">SUBMIT</button>
+                    </form>
+                </section>
+            {% else %}
+                <section class="no-review">
+                    <h2><a class="link-span" href="{% url 'sign-in' %}">Please Sign In <span class="bold">HERE</span> to write a review</a></h2>
+                </section>  
+            {% endif %}
+            <section class="reviews">
+                <div class="reviews-header"><h2>Reviews</h2></div>
+                {% if not product.reviews %}
+                    <section><h3>No Reviews</h3></section>
+                {% else %}
+                    <ul class="reviews">
+                        {% for review in reviews %}
+                            <li>
+                                <section><h3>{{ review.name }}</h3></section>
+                                <div class="rating-container">
+                                    <div class="review-rating"></div>
+                                    <section><h4>{{ review.created_at }};</h4></section>
+                                    <section><h4>{{ review.comment }}</h4></section>
+                                </div>
+                                <div class="line"></div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </section>
+        </section>
+    </section>
+{% endblock content %}

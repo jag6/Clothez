@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="cart-container wishlist-container">
+        <section class="cart-list">
+            <section class="cart-header">
+                <section><h1>Wishlist</h2></section>
+                <section><h2>Price</h2></section>
+            </section>
+            <ul id="cart-list-container" class="cart-list-container">
+                {% if not wishlist_items %}
+                    <h3><a class="link-span" href="{% url 'index' %}">Wishlist is Empty. Click <span class="bold">HERE</span> to View Our Listings!</a></h3>
+                {% else %}       
+                    {% for item in wishlist_items %}
+                        <li>
+                            <ul class="item-details">
+                                <li>
+                                    <a href="{% url 'product' item.product.id %}">
+                                        <div class="cart-img">
+                                            <img src="{{item.product.imageURL}}" alt="{{item.product.name}}">
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="cart-name">
+                                    <a href="{% url 'product' item.product.id %}">{{item.product.name}}</a>
+                                </li>
+                                <li>
+                                    <button aria-label="Add to Cart Button" type="submit" class="delete-btn">Add to Cart</button>
+                                    <button aria-label="Delete from Wishlist Button" type="submit" name="{{item.product.name}}" class="wishlist-delete-btn delete-btn">Delete</button>  
+                                </li>
+                                <li class="cart-price">
+                                    ${{item.product.price}}
+                                </li>
+                            </ul>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </section>
+    </section>
+{% endblock content %}

@@ -21,10 +21,6 @@
         </section>
         <form action="{% url 'sign-in' %}" method="post" class="form">
             {% include 'components/alert-messages.html' %}
-            <div class="alert-message success">
-                
-                <p>test</p>
-            </div>
             {% csrf_token %}
             <div class="form-field">
                 <label for="username">Username</label>

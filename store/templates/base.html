@@ -19,6 +19,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    {% if css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/' %}{{ css }}.css">
+    {% endif %}
     <!-- Canonical URL -->
     <link rel="canonical" href="https://clothezrfw.online{% block canonical %}{{ url }}{% endblock %}">
     <!-- Metadata -->
@@ -27,12 +30,12 @@
     <!-- Twitter Metadata -->
     <meta name="twitter:title" content="{% block twitter_title %}{{ title }}{% endblock twitter_title %}">
     <meta name="twitter:description" content="{% block twitter_description %}{{ description }}{% endblock %}">
-    <meta name="twitter:image" content="{% static 'images/' %}{% block twitter_image %}{{ image }}{% endblock %}">
+    <meta name="twitter:image" content="{% static 'images/' %}{% block twitter_image %}{% if not image %}woman-sunglasses.webp{% else %}{{ image }}{% endif %}{% endblock %}">
     <meta name="twitter:card" content="summary_large_image">
     <!-- Other Social Media Metadata -->
     <meta property="og:title" content="{% block meta_title %}{{ title }}{% endblock %}">
     <meta property="og:description" content="{% block meta_description %}{{ description }}{% endblock %}">
-    <meta property="og:image" content="{% static 'images/' %}{% block meta_image %}{{ image }}{% endblock %}">
+    <meta property="og:image" content="{% static 'images/' %}{% block meta_image %}{% if not image %}woman-sunglasses.webp{% else %}{{ image }}{% endif %}{% endblock %}">
     <meta property="og:url" content="https://clothezrfw.online{% block meta_url %}{{ url }}{% endblock %}">
     <meta property="og:site_name" content="Clothez">
     <!--Scripts -->
@@ -44,7 +47,7 @@
 <body>
     <header>
         <nav class="nav">
-            <a href="{% url 'store' %}">
+            <a href="{% url 'index' %}">
                 <div class="brand">
                     <span><i class="fa-brands fa-cotton-bureau"></i></span>
                     <p>Clothez</p>
@@ -95,7 +98,7 @@
             <button type="submit" aria-label="Sidebar Open Button" id="sidebar-open-btn" class="sidebar-open-btn">
                 <i class="fa-solid fa-bars-staggered"></i>
             </button>
-            <form class="search-form">
+            <form action="{% url 'search' %}" method="get" class="search-form">
                 <input type="text" name="q" placeholder="Search...">
                 <button type="submit" aria-label="Search Button"><i class="fa fa-search"></i></button>
             </form>
@@ -106,8 +109,8 @@
         
         {% endblock content %}
     </main>
-    <button class="open-popup" id="open-popup"><i class="fas fa-phone"></i></button>
-    <div id="chat-popup" class="chat-popup">
+    <button class="open-popup" id="open-popup"  aria-label="Open Chat Popup Button"><i class="fas fa-phone"></i></button>
+    <div id="chat-popup" class="chat-popup box-shadow">
         <ul class="contact-icons">
             <li><a href=""><i class="fas fa-phone"></i></a></li>
             <li><a href=""><i class="fas fa-envelope"></i></a></li>
@@ -116,7 +119,7 @@
             <li><a href=""><i class="fab fa-twitter"></i></a></li>
             <li><a href=""><i class="fab fa-discord"></i></a></li>
         </ul>
-        <button type="button" class="chat-cancel" id="close-popup">CLOSE</button>
+        <button type="button" aria-label="Close Chat Popup Button" class="chat-cancel" id="close-popup">CLOSE</button>
     </div>
     <footer>
         <div><p>Clothez&copy; 2023</p></div>

@@ -145,7 +145,7 @@
 
                         cart = {};
 				        document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;'; 
-                        window.location.href = `{% url 'store' %}`;
+                        window.location.href = `{% url 'index' %}`;
                 } catch (error) {
                     console.log(error);
                 }

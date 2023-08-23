@@ -2,49 +2,58 @@
 {% load static %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="box-element">
-                <a class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
-                <br>
-	            <br>
-                <table class="table">
-                    <tr>
-                        <th><h5>Items:<strong>{{order.get_cart_items}}</strong></h5></th>
-                        <th><h5>Total:<strong>${{order.get_cart_total|floatformat:2}} </strong></h5></th>
-                        {% if order.get_cart_total %}
-                            <th>
-                                <a style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">Checkout</a>
-                            </th>
-                        {% endif %}
-                    </tr>
-                </table>
-            </div>
-            <br>
-            <div class="box-element">
-                <div class="cart-row">
-                    <div style="flex:2"></div>
-                    <div style="flex:2"><strong>Item</strong></div>
-                    <div style="flex:1"><strong>Price</strong></div>
-                    <div style="flex:1"><strong>Quantity</strong></div>
-                    <div style="flex:1"><strong>Total</strong></div>
-                </div>
-                {% for item in items %}
-                    <div class="cart-row">
-                        <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
-                        <div style="flex:2"><p>{{item.product.name}}</p></div>
-                        <div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
-                        <div style="flex:1">
-                            <p class="quantity">{{item.quantity}}</p>
-                            <div class="quantity">
-                                <img data-product="{{item.product.id}}" data-action="add" class="chg-quantity update-cart" src="{% static  'images/arrow-up.png' %}">
-                                <img data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart" src="{% static  'images/arrow-down.png' %}">
-                            </div>
-                        </div>
-                        <div style="flex:1"><p>${{item.get_total}}</p></div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+    <section class="cart-container">
+        <section class="cart-list">
+            <section class="cart-header">
+                <section><h1>Shopping Cart</h2></section>
+                <section><h2>Price</h2></section>
+            </section>
+            <ul id="cart-list-container" class="cart-list-container">
+                {% if not items %}
+                    <h3><a class="link-span" href="{% url 'index' %}">Cart is Empty. Click <span class="bold">HERE</span> to Start Shopping!</a></h3>
+                {% else %}        
+                    {% for item in items %}
+                        <li>
+                            <ul class="item-details">
+                                <li>
+                                    <a href="{{item.product.imageURL}}">
+                                        <div class="cart-img">
+                                            <img src="{{item.product.imageURL}}" alt="{{item.product.description}}">
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="cart-name">
+                                    <a href="{% url 'product' item.product.id %}"><?php echo $listing['name']; ?></a>
+                                </li>
+                                <li>
+                                    Qty: <span class="margin-right-half"></span>
+                                    <div><p>{{item.quantity}}</p></div>
+                                    <div class="cart-quantity-btns">
+                                        <span data-product="{{item.product.id}}" data-action="add" class="chg-quantity update-cart"><i class="fa-solid fa-caret-up"></i></span>
+                                        <span data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart"><i class="fa-solid fa-caret-down"></i></span>
+                                    </div>
+                                </li>
+                                <li class="cart-price">
+                                    {{item.product.price}}
+                                </li>
+                            </ul>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </section>
+        <section class="cart-action box-shadow">
+            <section id="cart-subtotal">
+                <h3>$
+                    {% if not item.get_total %}
+                        0.00
+                    {% else %}
+                        {{item.get_total}}
+                    {% endif %}
+                </h3>
+            </section>
+            <a href="{% url 'checkout' %}" id="checkout-btn" class="primary fw">Proceed to Checkout</a>
+            <a href="{% url 'index' %}" id="continue-shopping-btn" class="primary fw">Continue Shopping</a>
+        </section>
+    </section>
 {% endblock content %}
