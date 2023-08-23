@@ -63,6 +63,7 @@ const updateCart = async (productId, action) => {
             body: JSON.stringify({ productId: productId, action: action })
         });
         if(!response.ok) {
+            alert('Sorry, there\'s been an error. Please try again.');
             throw new Error(`${response.status}`);
         }
         await response.json();

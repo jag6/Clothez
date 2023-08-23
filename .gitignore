@@ -1,6 +1,7 @@
 venv
 
 */images
+*media/
 
 */__pycache__
 */migrations

@@ -4,7 +4,7 @@
             <li>
                 <a href="{% url 'product' product.id %}" target="_blank" class="product box-shadow">                        
                     <div class="product-img">
-                        <img src="{{product.imageURL}}" alt="{{product.name}}">
+                        <img src="{{product.image.url}}" alt="{{product.name}}">
                     </div> 
                     <section class="product-name">
                         <h4>{{product.name}}</h4> 

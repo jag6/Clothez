@@ -11,11 +11,11 @@
 
 {% block twitter_title %}{{ product.name }}{% endblock %}
 {% block twitter_description %}product{% endblock %}
-{% block twitter_image %}{{ product.imageURL }}{% endblock %}
+{% block twitter_image %}{{ product.image.url }}{% endblock %}
 
 {% block meta_title %}{{ product.name }}{% endblock %}
 {% block meta_description %}{{ product.description }}{% endblock %}
-{% block meta_image %}{{ product.imageURL }}{% endblock %}
+{% block meta_image %}{{ product.image.url }}{% endblock %}
 {% block meta_url %}{{ url }}{{ product.id }}{% endblock %}
 
 {% block content %}
@@ -23,7 +23,7 @@
         <section class="details">
             <section class="img-info">
                 <div class="details-img">
-                    <img class="product-img" src="{{ product.imageURL }}" alt="{{ product.name }}">
+                    <img class="product-img" src="{{ product.image.url }}" alt="{{ product.name }}">
                 </div>
                 <section class="details-info">
                     <section>
@@ -44,7 +44,7 @@
             <div class="details-action box-shadow">
                 <div><p>Price: ${{ product.price|floatformat:2 }}</p></div>
                 <div>
-                    <p>Status: {% if product.count_in_stock > 0 %}
+                    <p>Status: {% if product.count_in_stock > 0 or product.digital == True %}
                             <span class="success-text">In Stock</span>   
                         {% else %}
                             <span class="error-text">Unavailable</span>
