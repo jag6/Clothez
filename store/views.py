@@ -19,7 +19,7 @@ def index(request):
 
 	# cart
 	data = cartData(request)
-	cartItems = data['cartItems']
+	cart_items = data['cart_items']
 
 	# products
 	products = Product.objects.all()
@@ -28,7 +28,7 @@ def index(request):
 		'title': title,
 		'description': description,
 		'banner': banner,
-		'cartItems': cartItems,
+		'cart_items': cart_items,
 		'products': products, 
 	}
 	return render(request, 'store/index.html', context)
@@ -41,7 +41,7 @@ def search(request):
 
 	# cart
 	data = cartData(request)
-	cartItems = data['cartItems']
+	cart_items = data['cart_items']
 
 	#search info
 	queryset_list = Product.objects.order_by('-name')
@@ -60,7 +60,7 @@ def search(request):
 		'title': title,
 		'description': description,
 		'url': url,
-		'cartItems': cartItems,
+		'cart_items': cart_items,
 		'products': queryset_list,
 		'values': request.GET,
 		'price_options': price_options
@@ -75,7 +75,7 @@ def product(request, product_id):
 
 	# cart
 	data = cartData(request)
-	cartItems = data['cartItems']
+	cart_items = data['cart_items']
 
 	product = get_object_or_404(Product, pk = product_id)
 
@@ -83,7 +83,7 @@ def product(request, product_id):
 		'css': css,
 		'url': url,
 		'product': product,
-		'cartItems': cartItems
+		'cart_items': cart_items
 	}
 
 	return render(request, 'store/product.html', context)
@@ -97,14 +97,14 @@ def wishlist(request):
 
 	# cart
 	data = cartData(request)
-	cartItems = data['cartItems']
+	cart_items = data['cart_items']
 
 	context = {
 		'title': title,
 		'description': description,
 		'url': url,
 		'css': css,
-		'cartItems': cartItems
+		'cart_items': cart_items
 	}
 
 	return render(request, 'store/wishlist.html', context)
@@ -118,7 +118,7 @@ def cart(request):
 
 	# cart
 	data = cartData(request)
-	cartItems = data['cartItems']
+	cart_items = data['cart_items']
 	order = data['order']
 	items = data['items']
 
@@ -127,9 +127,9 @@ def cart(request):
 		'description': description,
 		'url': url,
 		'css': css,
-		'items': items, 
+		'cart_items': cart_items,
 		'order': order, 
-		'cartItems': cartItems
+		'items': items
 	}
 	return render(request, 'store/cart.html', context)
 
@@ -138,14 +138,14 @@ def checkout(request):
 	title = 'Checkout'
 	description = 'Pay with PayPal.'
 	url = '/checkout'
-	css = 'checkout'
+	css = 'cart'
 
 	#cart
 	data = cartData(request)
-	if not data['cartItems']:
+	if not data['cart_items']:
 		return redirect('/')
 	
-	cartItems = data['cartItems']
+	cart_items = data['cart_items']
 	order = data['order']
 	items = data['items']
 
@@ -154,9 +154,9 @@ def checkout(request):
 		'description': description,
 		'url': url,
 		'css': css,
-		'items': items, 
+		'cart_items': cart_items,
 		'order': order, 
-		'cartItems': cartItems
+		'items': items
 	}
 	return render(request, 'store/checkout.html', context)
 		
@@ -164,26 +164,26 @@ def checkout(request):
 def updateItem(request):
 	if request.method == 'POST':
 		data = json.loads(request.body)
-		productId = data['productId']
+		product_id = data['product_id']
 		action = data['action']
 		print('Action:', action)
-		print('Product:', productId)
+		print('Product:', product_id)
 
 		customer = request.user.customer
-		product = Product.objects.get(id=productId)
+		product = Product.objects.get(id=product_id)
 		order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
-		orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+		order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
 
 		if action == 'add':
-			orderItem.quantity = (orderItem.quantity + 1)
+			order_item.quantity = (order_item.quantity + 1)
 		elif action == 'remove':
-			orderItem.quantity = (orderItem.quantity - 1)
+			order_item.quantity = (order_item.quantity - 1)
 
-		orderItem.save()
+		order_item.save()
 
-		if orderItem.quantity <= 0:
-			orderItem.delete()
+		if order_item.quantity <= 0:
+			order_item.delete()
 
 		return JsonResponse('Item was added', safe=False)
 
@@ -228,16 +228,16 @@ def signUp(request):
 
 		# cart
 		data = cartData(request)
-		cartItems = data['cartItems']
+		cart_items = data['cart_items']
 
-		return render(request, 'user/sign-up.html', {'form': form, 'cartItems': cartItems})
+		return render(request, 'user/sign-up.html', {'form': form, 'cart_items': cart_items})
 	
 	if request.method == 'POST':
 		form = SignUpForm(request.POST)
 
 		# cart
 		data = cartData(request)
-		cartItems = data['cartItems']
+		cart_items = data['cart_items']
 
 		if form.is_valid():
 			#save new user
@@ -252,7 +252,7 @@ def signUp(request):
 			return redirect('sign-in')
 		else:
 			form.errors
-			return render(request, 'user/sign-up.html', {'form': form, 'cartItems': cartItems})
+			return render(request, 'user/sign-up.html', {'form': form, 'cart_items': cart_items})
 
 def signIn(request):
 	# redirect signed-in users
@@ -264,16 +264,16 @@ def signIn(request):
 
 		# cart
 		data = cartData(request)
-		cartItems = data['cartItems']
+		cart_items = data['cart_items']
 
-		return render(request, 'user/sign-in.html', {'form': form, 'cartItems': cartItems})
+		return render(request, 'user/sign-in.html', {'form': form, 'cart_items': cart_items})
 	
 	if request.method == 'POST':
 		form = SignInForm(request.POST)
 
 		# cart
 		data = cartData(request)
-		cartItems = data['cartItems']
+		cart_items = data['cart_items']
 
 		if form.is_valid():
 			user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
@@ -285,7 +285,7 @@ def signIn(request):
 				return redirect('my-account')
 		else:
 			form.errors
-			return render(request, 'user/sign-in.html', {'form': form, 'cartItems': cartItems})
+			return render(request, 'user/sign-in.html', {'form': form, 'cart_items': cart_items})
 
 def myAccount(request):
 	if not request.user.is_authenticated:
@@ -298,13 +298,13 @@ def myAccount(request):
 
 	# cart
 	data = cartData(request)
-	cartItems = data['cartItems']
+	cart_items = data['cart_items']
 
 	context = {
 		'title': title,
 		'description': description,
 		'url': url,
-		'cartItems': cartItems
+		'cart_items': cart_items
 	}
 		
 	return render(request, 'user/my-account.html', context)

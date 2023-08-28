@@ -33,25 +33,25 @@ if (cart == undefined) {
     document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
 }
 
-const updateCookieCart = (productId, action) => {
+const updateCookieCart = (product_id, action) => {
     if(action == 'add') {
-        if(cart[productId] == undefined) {
-            cart[productId] = {'quantity': 1}; 
+        if(cart[product_id] == undefined) {
+            cart[product_id] = {'quantity': 1}; 
         }else {
-            cart[productId]['quantity'] += 1;
+            cart[product_id]['quantity'] += 1;
         }
     }
     if(action == 'remove') {
-        cart[productId]['quantity'] -= 1
-        if(cart[productId]['quantity'] <= 0) {
-            delete cart[productId];
+        cart[product_id]['quantity'] -= 1
+        if(cart[product_id]['quantity'] <= 0) {
+            delete cart[product_id];
         }
     }
     document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
     window.location.reload();
 }
 
-const updateCart = async (productId, action) => {
+const updateCart = async (product_id, action) => {
     try {
         const response = await fetch('/update_item', {
             method: 'POST',
@@ -60,7 +60,7 @@ const updateCart = async (productId, action) => {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrftoken,
             }, 
-            body: JSON.stringify({ productId: productId, action: action })
+            body: JSON.stringify({ product_id: product_id, action: action })
         });
         if(!response.ok) {
             alert('Sorry, there\'s been an error. Please try again.');
@@ -77,13 +77,13 @@ if(document.querySelector('.update-cart')) {
     const updateBtns = document.querySelectorAll('.update-cart');
     updateBtns.forEach((btn) => {
         btn.addEventListener('click', () => {
-            let productId = btn.dataset.product;
+            let product_id = btn.dataset.product;
             let action = btn.dataset.action;
 
             if(user == 'AnonymousUser') {
-                updateCookieCart(productId, action);
+                updateCookieCart(product_id, action);
             }else {
-                updateCart(productId, action);
+                updateCart(product_id, action);
             }
         });
     });
@@ -103,8 +103,17 @@ if(document.querySelector('.alert-message')) {
 
 // ANIMATIONS
 const scrollElements = document.querySelectorAll('.js-scroll');
+var throttleTimer;
+const throttle = (callback, time) => {
+    if(throttleTimer) return;
+    throttleTimer = true;
+    setTimeout(() => {
+        callback();
+        throttleTimer = false;
+    }, time);
+};
 const elementInView = (el, dividend = 1) => {
-  const elementTop = el.getBoundingClientRect().top;
+    const elementTop = el.getBoundingClientRect().top;
   	return (
     	elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
 	);
@@ -123,15 +132,17 @@ const hideScrollElement = (element) => {
 };
 const handleScrollAnimation = () => {
 	scrollElements.forEach((el) => {
-    	if (elementInView(el, 1.25)) {
+    	if(elementInView(el, 1.25)) {
       	    displayScrollElement(el);
-    	} else if (elementOutofView(el)) { 
+    	} else if(elementOutofView(el)) { 
             hideScrollElement(el)
         }
   	});
 };
 window.addEventListener('scroll', () => { 
-	handleScrollAnimation();
+	throttle(() => {
+        handleScrollAnimation();
+    }, 250);
 });
 
 

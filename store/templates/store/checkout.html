@@ -2,68 +2,65 @@
 {% load static %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="box-element" id="form-wrapper">
-                <form id="form">
-                    {% if not user.is_authenticated %}
-                        <div id="user-info">
-                            <div class="form-field">
-                                <input required class="form-control" type="text" name="name" placeholder="Name..">
-                            </div>
-                            <div class="form-field">
-                                <input required class="form-control" type="email" name="email" placeholder="Email..">
-                            </div>
+    <section class="checkout-header page-header"><h1>- CHECKOUT -</h1></section>
+    <section class="checkout-container">
+        <section class="checkout-user-info box-shadow">
+            <form id="form" class="form">
+                {% if not user.is_authenticated %}
+                    <section id="user-info">
+                        <section><h2>Customer Information:</h2></section>
+                        <div class="form-field">
+                            <input required class="form-control" type="text" name="first_name" placeholder="First Name...">
                         </div>
-                    {% endif %}
-                    {% if order.shipping %}
-                        <div id="shipping-info">
-                            <hr>
-                            <p>Shipping Information:</p>
-                            <hr>
-                            <div class="form-field">
-                                <input required class="form-control" type="text" name="address" placeholder="Address..">
-                            </div>
-                            <div class="form-field">
-                                <input required class="form-control" type="text" name="city" placeholder="City..">
-                            </div>
-                            <div class="form-field">
-                                <input required class="form-control" type="text" name="state" placeholder="State..">
-                            </div>
-                            <div class="form-field">
-                                <input required class="form-control" type="text" name="zipcode" placeholder="Zip code..">
-                            </div>
+                        <div class="form-field">
+                            <input required class="form-control" type="text" name="last_name" placeholder="Last Name...">
                         </div>
-                    {% endif %}
-                    <hr>
-                    <input required id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
-                </form>
-                <br>
-                <div class="box-element hidden" id="payment-info">
-                    <small>Paypal Options</small>
-                    <div id="paypal-button-container"></div>
-                </div>
-            </div>
+                        <div class="form-field">
+                            <input required class="form-control" type="email" name="email" placeholder="Email...">
+                        </div>
+                    </section>
+                {% endif %}
+                {% if order.shipping %}
+                    <section id="shipping-info">
+                        <section><h2>Shipping Information:</h2></section>
+                        <div class="form-field">
+                            <input required class="form-control" type="text" name="address" placeholder="Address...">
+                        </div>
+                        <div class="form-field">
+                            <input required class="form-control" type="text" name="city" placeholder="City...">
+                        </div>
+                        <div class="form-field">
+                            <input required class="form-control" type="text" name="state" placeholder="State...">
+                        </div>
+                        <div class="form-field">
+                            <input required class="form-control" type="text" name="zipcode" placeholder="Zip code...">
+                        </div>
+                    </section>
+                {% endif %}
+                <button aria-label="Continue Checkout Button" required id="form-button" class="btn btn-success btn-block" type="submit">CONTINUE</button>
+            </form>
+            <section id="payment-info" class="hidden pay-pal-container">
+                <section><h2>Paypal Options</h2></section>
+                <div id="paypal-button-container"></div>
+            </section>
         </div>
-        <div class="col-lg-6">
-            <div class="box-element">
-                <a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
-                <hr>
-                <h3>Order Summary</h3>
-                <hr>
+        </section>
+        <section class="checkout-order-info">
+            <section><h2>Order Summary</h2></section>
+            <ul class="margin-top-1">
                 {% for item in items %}
-                <div class="cart-row">
-                    <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
-                    <div style="flex:2"><p>{{item.product.name}}</p></div>
-                    <div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
-                    <div style="flex:1"><p>x{{item.quantity}}</p></div>
-                </div>
+                    <li class="item-details">
+                        <div><img src="{{item.product.imageURL}}"></div>
+                        <div class="item-name"><p>{{item.product.name}}</p></div>
+                        <div><p>${{item.product.price|floatformat:2}}</p></div>
+                        <div><p>x{{item.quantity}}</p></div>
+                    </li>
                 {% endfor %}
-                <h5>Items: {{order.get_cart_items}}</h5>
-                <h5>Total: ${{order.get_cart_total|floatformat:2}}</h5>
-            </div>
-        </div>
-    </div>
+            </ul>
+            <div><p>Items: {{order.get_cart_items}}</p></div>
+            <div><p>Total: ${{order.get_cart_total|floatformat:2}}</p></div>
+        </section>
+    </section>
     <script src="https://www.paypal.com/sdk/js?client-id=AS6gKGXYE3UOk1dqjCOPbZHREsRJJ6Z80ghEY8JRkoT2pSmvl75PhYK3aS6OUPXBnO_1ifAwm-YxijMQ&currency=USD" type="text/javascript"></script>
     <script type="text/javascript">
         const total = '{{order.get_cart_total}}';
@@ -100,7 +97,8 @@
 
         const submitFormData = () => {
             let userFormData = {
-                'name': null,
+                'first_name': null,
+                'last_name': null,
                 'email': null,
                 'total': total,
             };
@@ -120,7 +118,8 @@
             }
 
             if(user == 'AnonymousUser') {
-                userFormData.name = form.name.value;
+                userFormData.first_name = form.first_name.value;
+                userFormData.last_name = form.last_name.value;
                 userFormData.email = form.email.value;
             }
             

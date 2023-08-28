@@ -13,30 +13,26 @@
                     <h3><a class="link-span" href="{% url 'index' %}">Cart is Empty. Click <span class="bold">HERE</span> to Start Shopping!</a></h3>
                 {% else %}        
                     {% for item in items %}
-                        <li>
-                            <ul class="item-details">
-                                <li>
-                                    <a href="{{item.product.imageURL}}">
-                                        <div class="cart-img">
-                                            <img src="{{item.product.imageURL}}" alt="{{item.product.description}}">
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="cart-name">
-                                    <a href="{% url 'product' item.product.id %}"><?php echo $listing['name']; ?></a>
-                                </li>
-                                <li>
-                                    Qty: <span class="margin-right-half"></span>
-                                    <div><p>{{item.quantity}}</p></div>
-                                    <div class="cart-quantity-btns">
-                                        <span data-product="{{item.product.id}}" data-action="add" class="chg-quantity update-cart"><i class="fa-solid fa-caret-up"></i></span>
-                                        <span data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart"><i class="fa-solid fa-caret-down"></i></span>
+                        <li class="item-details">
+                            <div>
+                                <a href="{{item.product.imageURL}}">
+                                    <div class="cart-img">
+                                        <img src="{{item.product.imageURL}}" alt="{{item.product.description}}">
                                     </div>
-                                </li>
-                                <li class="cart-price">
-                                    {{item.product.price}}
-                                </li>
-                            </ul>
+                                </a>
+                            </div>
+                            <div class="item-name"><a href="{% url 'product' item.product.id %}">{{item.product.name}}</a></div>
+                            <div>
+                                Qty: <span class="margin-right-half"></span>
+                                <div><p>{{item.quantity}}</p></div>
+                                <div class="cart-quantity-btns">
+                                    <span data-product="{{item.product.id}}" data-action="add" class="chg-quantity update-cart"><i class="fa-solid fa-caret-up"></i></span>
+                                    <span data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart"><i class="fa-solid fa-caret-down"></i></span>
+                                </div>
+                            </div>
+                            <div class="cart-price">
+                                {{item.product.price}}
+                            </div>
                         </li>
                     {% endfor %}
                 {% endif %}
@@ -45,10 +41,10 @@
         <section class="cart-action box-shadow">
             <section id="cart-subtotal">
                 <h3>$
-                    {% if not item.get_total %}
+                    {% if not order.get_cart_total %}
                         0.00
                     {% else %}
-                        {{item.get_total}}
+                        {{order.get_cart_total|floatformat:2}}
                     {% endif %}
                 </h3>
             </section>

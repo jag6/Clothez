@@ -19,19 +19,20 @@
 
 .cart-list-container li { 
     display: flex; justify-content: space-between; 
+}
+.item-details { 
+    display: flex; flex-flow: row wrap; 
+    justify-content: space-between; 
     padding-bottom: 1rem; margin-bottom: 1rem; 
     border-bottom: .1rem #c0c0c0 solid; 
 }
-.item-details { display: flex; flex-flow: row wrap; justify-content: space-between; width: 100%; }
-.item-details li { 
-    border-bottom: 0 transparent solid; 
-    padding-bottom: 0rem; margin-bottom: 0rem; 
+.item-details div { 
+    display: flex;
     font-size: 18px; line-height: 32px; 
     align-items: center; 
 }
-
-.cart-img, .cart-img img { width: 3.5rem; height: auto; }
-.cart-name { width: 200px; }
+.item-details img { width: 3.5rem; height: auto; }
+.item-name { width: 200px; }
 .cart-quantity-btns { display: flex; flex-direction: column; }
 .cart-quantity-btns span { font-size: 24px; line-height: 24px; margin-left: 1rem; }
 .cart-quantity-btns span:hover { cursor: pointer; }
@@ -75,3 +76,34 @@
     .cart-name { margin-top: -1rem; }  
     .cart-action { padding: 1rem 5 ; } 
 }
+
+
+/*CHECKOUT*/
+
+.checkout-header h1 { font-size: 40px; line-height: 64px; }
+.checkout-container { 
+    display: flex; flex-direction: row;
+    max-width: 1440px;
+    margin: 2rem auto 4rem auto;
+    justify-content: space-between;
+ }
+.checkout-user-info, .checkout-order-info { 
+    display: flex; flex-direction: column;
+    width: 50%;
+    margin: 0 5%; 
+}
+.checkout-user-info { background-color: #ccc; border-radius: 10px; }
+.checkout-container section { margin-bottom: .5rem; }
+.checkout-user-info h2 { font-size: 20px; line-height: 40px; }
+.checkout-container button { background-color: #FCCA3F; }
+
+.checkout-order-info h2 { font-size: 32px; line-height: 64px; }
+
+.pay-pal-container { padding: 0 2%; }
+
+@media only screen and (max-width: 800px) {
+    .checkout-container { flex-direction: column-reverse; margin: 2rem 5% 4rem 5%; justify-content: center; }
+    .checkout-user-info, .checkout-order-info { width: 100%; margin: 0; }
+    .checkout-order-info { margin-bottom: 1rem !important; }
+}
+@media only screen and (max-width: 576px) { .pay-pal-container { padding: 0 5%; } }

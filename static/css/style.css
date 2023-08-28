@@ -70,9 +70,6 @@ button.primary { background-color: #FCCA3F; }
 
 .bold { font-weight: 700; }
 
-.success { color: #346E26;font-weight: 700; }
-.error { color: #BA382F;font-weight: 700; }
-
 small { margin: -1rem 0 1rem 0;font-size: 14px;line-height: 24px; }
 
 .line { border-bottom: 2px solid #000;margin: 1rem 0; }
@@ -260,6 +257,7 @@ footer .nav ul li a:hover { border-bottom: solid 3px #fff;transition: .2s ease-i
 	.brand { margin-right: 3rem;}
 	header .page-links  { display: none }
 	.user-links li:nth-child(1), .user-links li:nth-child(2) { display: none; }
+	.ul-guest { min-width: auto; }
 
 	footer { 
 		padding-top: 1rem; 
@@ -441,27 +439,8 @@ aside {
 	width: 100%; 
 	padding: 1.5rem 2%;
 }
-
 .form-container section h1, .form-container section h2 { font-size: 24px; line-height: 32px; text-align: center; }
-
 .form-container section span { margin-right: .5rem; }
-
-.form button { 
-	border-radius: 10px; 
-	margin-top: 1rem; 
-	font-weight: 700; 
-	font-size: 20px; line-height: 24px; 
-}
-
-.form input { border-radius: 10px; }
-.form input, .form textarea { margin-bottom: 1rem; }
-
-label { margin-bottom: .5rem; }
-
-.form-field, .form-links p { color: #111; }
-.form a { color: #111; font-weight: 700; }
-.form a span { font-size: 16px; line-height: 32px; border-bottom: 2px solid transparent; }
-.form a span:hover { border-bottom: 2px solid #111; transition: .2s ease-in-out; }
 
 .form-field, .form-links { 
 	margin-top: 3rem;
@@ -476,8 +455,25 @@ label { margin-bottom: .5rem; }
 	border-radius: 0;
 	margin-top: 0; padding: 0;
 }
+.form-field, .form-links p { color: #111; }
 
-@media only screen and (max-width: 576px) { .form { margin: 3% 5%; padding: 2rem 5%;} }
+label { margin-bottom: .5rem; }
+.form input { border-radius: 10px; }
+.form input:focus { outline: 2px solid #59BA41; }
+.form input, .form textarea { margin-bottom: 1rem; }
+
+.form a { color: #111; font-weight: 700; }
+.form a span { font-size: 16px; line-height: 32px; border-bottom: 2px solid transparent; }
+.form a span:hover { border-bottom: 2px solid #111; transition: .2s ease-in-out; }
+
+.form button { 
+	border-radius: 10px; 
+	margin-top: 1rem; 
+	font-weight: 700; 
+	font-size: 20px; line-height: 24px; 
+}
+
+@media only screen and (max-width: 576px) { .form { padding: 1.5rem 5%; } }
 
 
 /*ANIMATIONS*/

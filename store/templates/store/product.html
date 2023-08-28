@@ -51,7 +51,7 @@
                         {% endif %}
                     </p>
                 </div>
-                {% if product.count_in_stock > 0 %}
+                {% if product.count_in_stock > 0 or product.digital == True %}
                     <div>
                         <button data-product="{{product.id}}" data-action="add" class="fw primary bold update-cart">ADD TO CART</button>
                     </div>
