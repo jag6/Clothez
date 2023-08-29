@@ -44,13 +44,31 @@ class SignUpForm(forms.ModelForm):
         if not password:
             self.add_error('password', 'Please fill in password')
         elif len(password) <= 7:
-            self.add_error('password', 'Password must be at least 8 characters')
+            self.add_error('password', 'Password must be at least 8 characters long')
 
         return self.cleaned_data
                 
 class SignInForm(forms.Form):
     username = forms.CharField(max_length=20)
     password = forms.CharField(max_length=20)
+
+class ChangePasswordForm(forms.ModelForm):
+    password = forms.CharField(max_length=20, label='password')
+
+    class Meta:
+        model = User
+        fields = ('password',)
+    
+    def clean (self):
+        super(ChangePasswordForm, self).clean()
+
+        password = self.cleaned_data.get('password')
+        if not password:
+            self.add_error('password', 'Please fill in password')
+        elif len(password) <=7 :
+            self.add_error('password', 'Password must be at least 8 characters long')
+
+        return self.cleaned_data
 
 
 # class CheckoutForm(forms.ModelForm):

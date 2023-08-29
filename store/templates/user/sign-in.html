@@ -24,13 +24,13 @@
             {% csrf_token %}
             <div class="form-field">
                 <label for="username">Username</label>
-                <input type="username" name="username" id="username" value="{{ form.username.value | default_if_none:'' }}">
+                <input type="username" name="username" id="username" value="{{form.username.value | default_if_none:''}}">
             </div>
             <div class="form-field">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" value="{{ form.password.value | default_if_none:'' }}">
+                <input type="password" name="password" id="password" value="{{form.password.value | default_if_none:''}}">
             </div>
-            <button aria-label="Login Button" type="submit" class="primary">SIGN IN</button>
+            <button aria-label="Sign-In Button" type="submit" class="primary">SIGN IN</button>
             <div class="form-links">
                 <p>Don't have an account?</p><a href="{% url 'sign-up' %}"><span>Sign Up</span></a>
             </div>

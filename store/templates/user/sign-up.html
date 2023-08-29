@@ -24,25 +24,25 @@
             {% csrf_token %}
             <div class="form-field">
                 <label for="first_name">First Name</label>
-                <input type="text" name="first_name" id="first_name" value="{{ form.first_name.value | default_if_none:'' }}">
+                <input type="text" name="first_name" id="first_name" value="{{form.first_name.value | default_if_none:''}}">
             </div>
             <div class="form-field">
                 <label for="last_name">Last Name</label>
-                <input type="text" name="last_name" id="last_name" value="{{ form.last_name.value | default_if_none:'' }}">
+                <input type="text" name="last_name" id="last_name" value="{{form.last_name.value | default_if_none:''}}">
             </div>
             <div class="form-field">
                 <label for="username">Username</label>
-                <input type="text" name="username" id="username" value="{{ form.username.value | default_if_none:'' }}">
+                <input type="text" name="username" id="username" value="{{form.username.value | default_if_none:''}}">
             </div>
             <div class="form-field">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email" value="{{ form.email.value | default_if_none:'' }}">
+                <input type="email" name="email" id="email" value="{{form.email.value | default_if_none:''}}">
             </div>
             <div class="form-field">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" value="{{ form.password.value | default_if_none:'' }}">
+                <input type="password" name="password" id="password" value="{{form.password.value | default_if_none:''}}">
             </div>
-            <button aria-label="Login Button" type="submit" class="primary">SIGN UP</button>
+            <button aria-label="Sign-Up Button" type="submit" class="primary">SIGN UP</button>
             <div class="form-links">
                 <p>Already have an account?</p><a href="{% url 'sign-in' %}"><span>Sign In</span></a>
             </div>

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import update_session_auth_hash
 import json
 import datetime
 from . models import *
@@ -279,7 +281,7 @@ def signIn(request):
 			user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 			if user is None:
 				messages.error(request, 'Invalid credentials, please try again')
-				return render(request, 'accounts/login.html')  
+				return render(request, 'user/sign-in.html')  
 			else:
 				auth.login(request, user)
 				return redirect('my-account')
@@ -291,26 +293,41 @@ def myAccount(request):
 	if not request.user.is_authenticated:
 		return redirect('sign-in')
 	
-	# metadata
-	title = 'My Account'
-	description = 'View previous orders or change account information.'
-	url = '/my-account'
+	if request.method == 'GET':
+		form = ChangePasswordForm()
 
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
+		# cart
+		data = cartData(request)
+		cart_items = data['cart_items']
 
-	context = {
-		'title': title,
-		'description': description,
-		'url': url,
-		'cart_items': cart_items
-	}
+		#orders
+		orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
 		
-	return render(request, 'user/my-account.html', context)
+		return render(request, 'user/my-account.html', {'form': form, 'cart_items': cart_items, 'orders': orders})
+	
+	if request.method == 'POST':
+		form = ChangePasswordForm(request.POST)
+
+		# cart
+		data = cartData(request)
+		cart_items = data['cart_items']
+
+		#orders
+		orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
+
+		if form.is_valid():
+			#update user
+			password = make_password(form.cleaned_data['password'], hasher='default')
+			User.objects.filter(username=request.user.username).update(password=password)
+
+			messages.success(request, 'Password successfully updated.')
+			return redirect('my-account')
+		else:
+			form.errors
+			return render(request, 'user/my-account.html', {'form': form, 'cart_items': cart_items, 'orders': orders})
 
 def signOut(request):
     if request.method == 'POST':
         auth.logout(request)
-        messages.success(request, 'Logout Successful')
+        messages.success(request, 'Sign-out Successful')
         return redirect('sign-in')

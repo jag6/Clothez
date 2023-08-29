@@ -36,6 +36,10 @@
                             <input required class="form-control" type="text" name="zipcode" placeholder="Zip code...">
                         </div>
                     </section>
+                {% else %}
+                    {% if user.is_authenticated %}
+                        <section id="proceed-info" class="proceed-info"><p>Shipping information is not required for this item.<br> Please click the button below to open up PayPal and proceed with checkout.</p></section>
+                    {% endif %}
                 {% endif %}
                 <button aria-label="Continue Checkout Button" required id="form-button" class="btn btn-success btn-block" type="submit">CONTINUE</button>
             </form>
@@ -91,6 +95,9 @@
         const form = document.getElementById('form');
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            if(document.getElementById('proceed-info')) {
+                document.getElementById('proceed-info').classList.add('hidden');
+            }
             document.getElementById('form-button').classList.add('hidden');
             document.getElementById('payment-info').classList.remove('hidden');
         });

@@ -1,12 +1,60 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block canonical %}/my-account{% endblock %}
+
+{% block description %}View previous orders or change account information.{% endblock %}
+
+{% block twitter_title %}My Account{% endblock %}
+{% block twitter_description %}View previous orders or change account information.{% endblock %}
+
+{% block meta_title %}My Account{% endblock %}
+{% block meta_description %}View previous orders or change account information.{% endblock %}
+{% block meta_url %}/my-account{% endblock %}
+
+{% block title %}My Account - Clothez{% endblock %}
+
 {% block content %}
-    <div class="logout-btn">
+    <section class="my-account-header">
+        <section><h1>My Account</h1></section>
         <form action="{% url 'sign-out' %}" method="post">
             {% csrf_token %}
-            <button class="opacity-8" type="submit"><i class="fa fa-sign-in margin-right-1"></i>Sign-Out</button>
+            <button aria-label="Sign-Out Button" class="opacity-8" type="submit"><i class="fa fa-sign-in margin-right-1"></i>Sign-Out</button>
         </form>
-    </div>
-    <h1>My ACCOUNT</h1>
+    </section>
+    <section class="my-account-container">
+        <section class= "my-account-user-orders">
+            <section class="margin-bottom-1"><h2>Orders</h2></section>
+            {% if orders %}
+                <div class="line">
+                    <div><p>Order Date</p></div>
+                    <div><p>View</p></div>
+                </div>
+                <ul>
+                    {% for order in orders %}
+                        <li>
+                            <div><p>{{order.date_ordered}}</p></div>
+                            <div><p>Here</p></div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <section><h2>No Orders</h2></section>
+            {% endif %}
+        </section>
+        <section class="my-account-user-info form-container box-shadow">
+            <section>
+                <h2><span><i class="fa-solid fa-pen-to-square"></i></span>Change Password</h2>
+            </section>
+            <form action="{% url 'my-account' %}" method="post" class="form">
+                {% include 'components/alert-messages.html' %}
+                {% csrf_token %}
+                <div class="form-field">
+                    <label for="password">New Password</label>
+                    <input type="password" name="password" id="password" value="{{form.password.value | default_if_none:''}}">
+                </div>
+                <button aria-label="Sign-In Button" type="submit" class="primary">SUBMIT</button>
+            </form>
+        </section>
+    </section>
 {% endblock content %}

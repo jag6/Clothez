@@ -68,11 +68,7 @@ button.primary { background-color: #FCCA3F; }
 
 .fw { width: 100%; }
 
-.bold { font-weight: 700; }
-
-small { margin: -1rem 0 1rem 0;font-size: 14px;line-height: 24px; }
-
-.line { border-bottom: 2px solid #000;margin: 1rem 0; }
+.bold { font-weight: 700; } 
 
 .hidden { display: none; }
 
@@ -577,4 +573,41 @@ label { margin-bottom: .5rem; }
 
 @media only screen and (max-width: 576px) { 
 	.open-button, .chat-popup { bottom: 224px; } 
+}
+
+
+/*MY ACCOUNT*/
+
+.my-account-header { max-width: 1800px; margin: 1rem 0 2rem 2.5%; }
+.my-account-header h1 { font-size: 48px; line-height: 72px; }
+
+.my-account-container { 
+	max-width: 1800px;
+	margin: 0 auto; margin-bottom: 4rem;
+	justify-content: space-between;
+	display: flex; flex-direction: row;
+}
+.my-account-user-orders, .my-account-user-info { 
+	width: 50%; margin: 2rem 2.5% 4rem 2.5%;
+ }
+ .my-account-user-orders h2 { font-size: 32px; line-height: 64px; }
+.my-account-user-orders .line {
+	border-bottom: 2px solid #222;
+	display: flex; flex-direction: row;
+	margin: 0 auto; margin-bottom: 1rem; padding: 0 1%;
+	justify-content: space-between;
+}
+.my-account-user-orders .line div p { font-size: 20px; line-height: 40px; }
+.my-account-user-orders ul li { 
+	display: flex; flex-direction: row;
+	margin: 0 auto; justify-content: space-between;
+	padding: 0 1%;
+}
+
+@media only screen and (max-width: 600px) {
+	.my-account-container { flex-direction: column; padding: 0 5%; }
+	.my-account-user-orders, .my-account-user-info { 
+		width: 100%; margin: 0 auto;
+	}
+	.my-account-user-info { margin-top: 4rem; }
 }
