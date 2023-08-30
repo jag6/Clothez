@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block canonical %}/my-account{% endblock %}
 
@@ -51,10 +50,10 @@
                 {% csrf_token %}
                 <div class="form-field">
                     <label for="password">New Password</label>
-                    <input type="password" name="password" id="password" value="{{form.password.value | default_if_none:''}}">
+                    <input required type="password" name="password" id="password" value="{{form.password.value | default_if_none:''}}">
                 </div>
                 <button aria-label="Sign-In Button" type="submit" class="primary">SUBMIT</button>
             </form>
         </section>
     </section>
-{% endblock content %}
+{% endblock %}

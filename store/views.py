@@ -17,7 +17,7 @@ def index(request):
 	description = 'Your number one stop for all of life\'s essentials.'
 
 	# banner
-	banner = Banner.objects.filter(name = 'Home Banner')
+	banner = Banner.objects.get(name = 'Home Banner')
 
 	# cart
 	data = cartData(request)

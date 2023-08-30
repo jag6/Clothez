@@ -1,0 +1,12 @@
+/*ADMIN*/
+
+#header { background-color: #1C353D; }
+#header h1 { color: #fff; font-weight: 700 !important; }
+.breadcrumbs a:hover, .submit-row input:hover, #nav-sidebar a:hover, #container a:hover { opacity: .5; }
+.admin-logo img {
+    height: 32px;
+    width: 32px;
+}
+.row a, .changelink a { color: #5DAEC9 !important;  }
+.breadcrumbs a , #content-main caption, .submit-row input { font-weight: 700 !important; }
+#container caption { background-color: #1C353D; }

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     ###
     'store',
+    'pages',
     'markdownify'
 ]
 
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'eCommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -178,6 +179,14 @@ MARKDOWNIFY = {
         "WHITELIST_PROTOCOLS": [
             'http',
             'https',
-        ]
+        ],
+        "LINKIFY_TEXT": {
+            "PARSE_URLS": True,
+
+            # Next key/value-pairs only have effect if "PARSE_URLS" is True
+            "PARSE_EMAIL": True,
+            "CALLBACKS": [],
+            "SKIP_TAGS": [],
+        }
     }
 }

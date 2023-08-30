@@ -28,7 +28,7 @@ time, mark, audio, video {
 
 html { scroll-behavior: smooth; line-height:1.5; scroll-padding-top: 56px; }
 html, body { min-height: 100vh; position: relative; }
-body { font: 8px "Cabin", sans-serif; background-color: #dedede; }
+body { font: 8px 'Cabin', sans-serif; background-color: #dedede; }
 main { padding: 56px 0; }
 
 @media only screen and (max-width: 1200px) { 
@@ -610,4 +610,28 @@ label { margin-bottom: .5rem; }
 		width: 100%; margin: 0 auto;
 	}
 	.my-account-user-info { margin-top: 4rem; }
+}
+
+
+/*PAGES*/
+
+.pc-banner { max-width: 900px; }
+.page-content { 
+	max-width: 900px; 
+	display: flex; flex-direction: column;
+	margin: 0 auto 4rem auto; justify-content: center;
+}
+.page-content h1 { font-size: 48px; line-height: 72px; }
+.page-content h2 { font-size: 32px; line-height: 64px; }
+.page-content h3 { font-size: 24px; line-height: 48px; }
+.page-content h4 { font-size: 20px; line-height: 40px; }
+.page-content p { margin-bottom: 1rem; }
+.page-content h1, .page-content h2, .page-content h3, .page-content h4 { margin-bottom: 2rem; }
+.page-content a { font-weight: 700; }
+
+@media only screen and (max-width: 900px) {
+	.page-content { padding: 0 5%; }
+}
+@media only screen and (max-width: 576px) {
+	.page-content h1 { font-size: 40px; }
 }
