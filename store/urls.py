@@ -10,10 +10,5 @@ urlpatterns = [
     path('checkout', views.checkout, name="checkout"),
     # api
     path('update_item', views.updateItem, name="update_item"),
-    path('process_order', views.processOrder, name="process_order"),
-    # user
-    path('sign-up', views.signUp, name="sign-up"),
-    path('sign-in', views.signIn, name="sign-in"),
-    path('my-account', views.myAccount, name="my-account"),
-    path('sign-out', views.signOut, name="sign-out")
+    path('process_order', views.processOrder, name="process_order")
 ]

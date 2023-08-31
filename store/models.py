@@ -20,6 +20,9 @@ class Customer(models.Model):
 class Product(models.Model):
 	name = models.CharField(max_length=200, null=True)
 	description = models.TextField(null=True)
+	category = models.CharField(max_length=200, null=True)
+	type = models.CharField(max_length=200, null=True)
+	gender = models.CharField(max_length=200, null=True)
 	price = models.FloatField()
 	digital = models.BooleanField(default=False,null=True, blank=True)
 	image = models.ImageField(upload_to='products/', null=True)

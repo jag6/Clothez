@@ -2,5 +2,22 @@
 
 {% block content %}
     <section class="page-header"><h1>SEARCH</h1></section>
+    <div class="categories">
+        <ul>
+            {% for category in search_options %}
+                <li>{{category.category}}</li>
+            {% endfor %}
+        </ul>     
+        <ul>
+            {% for type in search_options %}
+                <li>{{type.type}}</li>
+            {% endfor %}
+        </ul>      
+        <ul>
+            {% for gender in search_options %}
+                <li>{{gender.type}}</li>
+            {% endfor %}
+        </ul>      
+    </div>
     {% include 'components/products-container.html' %}
 {% endblock %}
