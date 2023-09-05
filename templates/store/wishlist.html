@@ -11,27 +11,23 @@
                 {% if not wishlist_items %}
                     <h3><a class="link-span" href="{% url 'index' %}">Wishlist is Empty. Click <span class="bold">HERE</span> to View Our Listings!</a></h3>
                 {% else %}       
-                    {% for item in wishlist_items %}
-                        <li>
-                            <ul class="item-details">
-                                <li>
-                                    <a href="{% url 'product' item.product.id %}">
-                                        <div class="cart-img">
-                                            <img src="{{item.product.imageURL}}" alt="{{item.product.name}}">
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="cart-name">
-                                    <a href="{% url 'product' item.product.id %}">{{item.product.name}}</a>
-                                </li>
-                                <li>
-                                    <button aria-label="Add to Cart Button" type="submit" class="delete-btn">Add to Cart</button>
-                                    <button aria-label="Delete from Wishlist Button" type="submit" name="{{item.product.name}}" class="wishlist-delete-btn delete-btn">Delete</button>  
-                                </li>
-                                <li class="cart-price">
-                                    ${{item.product.price}}
-                                </li>
-                            </ul>
+                    {% for item in items %}
+                        <li class="item-details">
+                            <div>
+                                <a href="{% url 'product' item.product.id %}">
+                                    <div class="cart-img">
+                                        <img src="{{item.product.imageURL}}" alt="{{item.product.name}}">
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="item-name"><a href="{% url 'product' item.product.id %}">{{item.product.name}}</a></div>
+                            <div class="wishlist-btns">
+                                <div><button data-product="{{item.product.id}}" data-action="add-to-cart" aria-label="Add to Cart Button" type="submit" class="update-wishlist">Add to Cart</button></div>
+                                <div><button data-product="{{item.product.id}}" data-action="remove" aria-label="Delete from Wishlist Button" type="submit" class="update-wishlist">Delete</button></div>
+                            </div>
+                            <div class="cart-price">
+                                {{item.product.price | floatformat:2}}
+                            </div>
                         </li>
                     {% endfor %}
                 {% endif %}

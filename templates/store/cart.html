@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <section class="cart-container">
+    <section class="{% if order.get_cart_total %}cart-container{% else %}cart-container wishlist-container{% endif %}">
         <section class="cart-list">
             <section class="cart-header">
                 <section><h1>Shopping Cart</h2></section>
@@ -14,9 +14,9 @@
                     {% for item in items %}
                         <li class="item-details">
                             <div>
-                                <a href="{{item.product.imageURL}}">
+                                <a href="{% url 'product' item.product.id %}">
                                     <div class="cart-img">
-                                        <img src="{{item.product.imageURL}}" alt="{{item.product.description}}">
+                                        <img src="{{item.product.imageURL}}" alt="{{item.product.name}}">
                                     </div>
                                 </a>
                             </div>
@@ -25,30 +25,26 @@
                                 Qty: <span class="margin-right-half"></span>
                                 <div><p>{{item.quantity}}</p></div>
                                 <div class="cart-quantity-btns">
-                                    <span data-product="{{item.product.id}}" data-action="add" class="chg-quantity update-cart"><i class="fa-solid fa-caret-up"></i></span>
-                                    <span data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart"><i class="fa-solid fa-caret-down"></i></span>
+                                    <span data-product="{{item.product.id}}" data-action="add" class="update-cart"><i class="fa-solid fa-caret-up"></i></span>
+                                    <span data-product="{{item.product.id}}" data-action="remove" class="update-cart"><i class="fa-solid fa-caret-down"></i></span>
                                 </div>
                             </div>
                             <div class="cart-price">
-                                {{item.product.price}}
+                                {{item.product.price | floatformat:2}}
                             </div>
                         </li>
                     {% endfor %}
                 {% endif %}
             </ul>
         </section>
-        <section class="cart-action box-shadow">
-            <section id="cart-subtotal">
-                <h3>$
-                    {% if not order.get_cart_total %}
-                        0.00
-                    {% else %}
-                        {{order.get_cart_total|floatformat:2}}
-                    {% endif %}
-                </h3>
+        {% if order.get_cart_total %}
+            <section class="cart-action box-shadow">
+                <section id="cart-subtotal">
+                    <h3>Total: ${{order.get_cart_total|floatformat:2}}</h3>
+                </section>
+                <a href="{% url 'checkout' %}" id="checkout-btn" class="primary fw">Proceed to Checkout</a>
+                <a href="{% url 'index' %}" id="continue-shopping-btn" class="primary fw">Continue Shopping</a>
             </section>
-            <a href="{% url 'checkout' %}" id="checkout-btn" class="primary fw">Proceed to Checkout</a>
-            <a href="{% url 'index' %}" id="continue-shopping-btn" class="primary fw">Continue Shopping</a>
-        </section>
+        {% endif %}
     </section>
 {% endblock %}

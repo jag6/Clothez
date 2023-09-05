@@ -108,7 +108,6 @@
                 'email': null,
                 'total': total,
             };
-
             let shippingInfo = {
                 'address': null,
                 'city': null,
@@ -122,8 +121,7 @@
                 shippingInfo.state = form.state.value;
                 shippingInfo.zipcode = form.zipcode.value;
             }
-
-            if(user == 'AnonymousUser') {
+            if(user === 'AnonymousUser') {
                 userFormData.first_name = form.first_name.value;
                 userFormData.last_name = form.last_name.value;
                 userFormData.email = form.email.value;

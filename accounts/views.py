@@ -18,7 +18,7 @@ def signUp(request):
 		data = cartData(request)
 		cart_items = data['cart_items']
 
-		return render(request, 'user/sign-up.html', {'form': form, 'cart_items': cart_items})
+		return render(request, 'accounts/sign-up.html', {'form': form, 'cart_items': cart_items})
 	
 	if request.method == 'POST':
 		form = SignUpForm(request.POST)
@@ -40,7 +40,7 @@ def signUp(request):
 			return redirect('sign-in')
 		else:
 			form.errors
-			return render(request, 'user/sign-up.html', {'form': form, 'cart_items': cart_items})
+			return render(request, 'accounts/sign-up.html', {'form': form, 'cart_items': cart_items})
 
 def signIn(request):
 	# redirect signed-in users
@@ -54,7 +54,7 @@ def signIn(request):
 		data = cartData(request)
 		cart_items = data['cart_items']
 
-		return render(request, 'user/sign-in.html', {'form': form, 'cart_items': cart_items})
+		return render(request, 'accounts/sign-in.html', {'form': form, 'cart_items': cart_items})
 	
 	if request.method == 'POST':
 		form = SignInForm(request.POST)
@@ -67,13 +67,13 @@ def signIn(request):
 			user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 			if user is None:
 				messages.error(request, 'Invalid credentials, please try again')
-				return render(request, 'user/sign-in.html')  
+				return render(request, 'accounts/sign-in.html')  
 			else:
 				auth.login(request, user)
 				return redirect('my-account')
 		else:
 			form.errors
-			return render(request, 'user/sign-in.html', {'form': form, 'cart_items': cart_items})
+			return render(request, 'accounts/sign-in.html', {'form': form, 'cart_items': cart_items})
 
 def myAccount(request):
 	if not request.user.is_authenticated:
@@ -88,8 +88,11 @@ def myAccount(request):
 
 		#orders
 		orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
+
+		#order items
+		items = OrderItem.objects.all()
 		
-		return render(request, 'user/my-account.html', {'form': form, 'cart_items': cart_items, 'orders': orders})
+		return render(request, 'accounts/my-account.html', {'form': form, 'cart_items': cart_items, 'orders': orders, 'items': items})
 	
 	if request.method == 'POST':
 		form = ChangePasswordForm(request.POST)
@@ -110,7 +113,7 @@ def myAccount(request):
 			return redirect('my-account')
 		else:
 			form.errors
-			return render(request, 'user/my-account.html', {'form': form, 'cart_items': cart_items, 'orders': orders})
+			return render(request, 'accounts/my-account.html', {'form': form, 'cart_items': cart_items, 'orders': orders})
 
 def signOut(request):
     if request.method == 'POST':

@@ -1,8 +1,7 @@
 import json
-from .models import *
+from . models import *
 
 def cookieCart(request):
-	#create empty cart for non-logged in user
 	try:
 		cart = json.loads(request.COOKIES['cart'])
 	except:
@@ -26,8 +25,7 @@ def cookieCart(request):
 
 				item = {
                     'id': product.id,
-                    'product': {'id': product.id,'name': product.name, 'price': product.price, 
-                    'imageURL': product.imageURL}, 
+                    'product': {'id': product.id,'name': product.name, 'price': product.price, 'imageURL': product.imageURL}, 
                     'quantity': cart[i]['quantity'],
                     'digital': product.digital,
                     'get_total': total,
@@ -42,38 +40,56 @@ def cookieCart(request):
 	return {'cart_items': cart_items ,'order': order, 'items': items}
 
 def cartData(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cart_items = order.get_cart_items
-    else:
-        cookie_data = cookieCart(request)
-        cart_items = cookie_data['cart_items']
-        order = cookie_data['order']
-        items = cookie_data['items']
-
-    return {'cart_items': cart_items ,'order': order, 'items': items}
-
-	
-def guestOrder(request, data):
-	first_name = data['form']['first_name']
-	last_name = data['form']['last_name']
-	email = data['form']['email']
-
 	cookie_data = cookieCart(request)
+	cart_items = cookie_data['cart_items']
+	order = cookie_data['order']
 	items = cookie_data['items']
 
-	customer, created = Customer.objects.get_or_create(first_name=first_name, last_name=last_name, email=email)
-	customer.save()
+	return {'cart_items': cart_items,'order': order, 'items': items}
 
-	order = Order.objects.create(customer=customer, complete=False)
+def cookieWishlist(request):
+	try:
+		wishlist = json.loads(request.COOKIES['wishlist'])
+	except:
+		wishlist = {}
+		print('wishlist:', wishlist)
 
-	for item in items:
-		product = Product.objects.get(id=item['id'])
-		order_item = OrderItem.objects.create(
-			product=product,
-			order=order,
-			quantity=(item['quantity'] if item['quantity'] > 0 else -1*item['quantity'])
-		)
-	return customer, order
+	items = []
+	order = {'get_wishlist_total': 0, 'get_wishlist_items': 0, 'shipping': False}
+	wishlist_items = order['get_wishlist_items']
+
+	for i in wishlist:
+		try:	
+			if wishlist[i]['quantity'] > 0: 
+				wishlist_items += wishlist[i]['quantity']
+
+				product = Product.objects.get(id=i)
+				total = (product.price * wishlist[i]['quantity'])
+
+				order['get_wishlist_total'] += total
+				order['get_wishlist_items'] += wishlist[i]['quantity']
+
+				item = {
+                    'id': product.id,
+                    'product': {'id': product.id,'name': product.name, 'price': product.price, 
+                    'imageURL': product.imageURL}, 
+                    'quantity': wishlist[i]['quantity'],
+                    'digital': product.digital,
+                    'get_total': total,
+				}
+				items.append(item)
+
+				if product.digital == False:
+					order['shipping'] = True
+		except:
+			pass
+			
+	return {'wishlist_items': wishlist_items ,'order': order, 'items': items}
+
+def wishlistData(request):
+	cookie_data = cookieWishlist(request)
+	wishlist_items = cookie_data['wishlist_items']
+	order = cookie_data['order']
+	items = cookie_data['items']
+
+	return {'wishlist_items': wishlist_items, 'order': order, 'items': items}

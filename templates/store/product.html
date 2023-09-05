@@ -1,46 +1,46 @@
 {% extends 'base.html' %}
 {% load markdownify %}
 
-{% block title %}{{ product.name }}{% endblock %}
+{% block title %}{{product.name}}{% endblock %}
 
-{% block canonical %}{{ url }}{{ product.id }}{% endblock %}
+{% block canonical %}{{url}}{{product.id}}{% endblock %}
 
-{% block description %}{{ product.description }}{% endblock %}
+{% block description %}{{product.description}}{% endblock %}
 
-{% block twitter_title %}{{ product.name }}{% endblock %}
+{% block twitter_title %}{{product.name}}{% endblock %}
 {% block twitter_description %}product{% endblock %}
-{% block twitter_image %}{{ product.image.url }}{% endblock %}
+{% block twitter_image %}{{product.image.url}}{% endblock %}
 
-{% block meta_title %}{{ product.name }}{% endblock %}
-{% block meta_description %}{{ product.description }}{% endblock %}
-{% block meta_image %}{{ product.image.url }}{% endblock %}
-{% block meta_url %}{{ url }}{{ product.id }}{% endblock %}
+{% block meta_title %}{{product.name}}{% endblock %}
+{% block meta_description %}{{product.description}}{% endblock %}
+{% block meta_image %}{{product.image.url}}{% endblock %}
+{% block meta_url %}{{url}}{{product.id}}{% endblock %}
 
 {% block content %}
     <section class="product-container">
         <section class="details">
             <section class="img-info">
                 <div class="details-img">
-                    <img class="product-img" src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <img class="product-img" src="{{product.image.url}}" alt="{{product.name}}">
                 </div>
                 <section class="details-info">
                     <section>
-                        <h1 class="product-name">{{ product.name }}</h1>
+                        <h1 class="product-name">{{product.name}}</h1>
                     </section>
                     {% include 'components/product-rating.html' %}
                     <section>
-                        <h2 class="product-price">Price: ${{ product.price|floatformat:2 }}</h2>
+                        <h2 class="product-price">Price: ${{product.price|floatformat:2}}</h2>
                     </section>
                     <section>
                         <section><h2>Description:</h2></section>
                         <div>
-                            {{ product.description | markdownify }}
+                            {{product.description | markdownify}}
                         </div>
                     </section>
                 </section>
             </section>
             <div class="details-action box-shadow">
-                <div><p>Price: ${{ product.price|floatformat:2 }}</p></div>
+                <div><p>Price: ${{product.price|floatformat:2}}</p></div>
                 <div>
                     <p>Status: {% if product.count_in_stock > 0 or product.digital == True %}
                             <span class="success-text">In Stock</span>   
@@ -51,11 +51,11 @@
                 </div>
                 {% if product.count_in_stock > 0 or product.digital == True %}
                     <div>
-                        <button data-product="{{product.id}}" data-action="add" class="fw primary bold update-cart">ADD TO CART</button>
+                        <button data-product="{{product.id}}" data-action="add" class="fw primary bold cart-btn update-cart">ADD TO CART</button>
                     </div>
                 {% endif %}
                 <div>
-                    <button data-product="{{product.id}}" data-action="add" class="fw primary bold">ADD TO WISHLIST</button>
+                    <button data-product="{{product.id}}" data-action="add" class="fw bold wishlist-btn update-wishlist">ADD TO WISHLIST</button>
                 </div>
             </div>
         </section>
@@ -91,11 +91,11 @@
                     <ul class="reviews">
                         {% for review in reviews %}
                             <li>
-                                <section><h3>{{ review.name }}</h3></section>
+                                <section><h3>{{review.name}}</h3></section>
                                 <div class="rating-container">
                                     <div class="review-rating"></div>
-                                    <section><h4>{{ review.created_at }};</h4></section>
-                                    <section><h4>{{ review.comment }}</h4></section>
+                                    <section><h4>{{review.created_at}};</h4></section>
+                                    <section><h4>{{review.comment}}</h4></section>
                                 </div>
                                 <div class="line"></div>
                             </li>

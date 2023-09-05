@@ -1,4 +1,4 @@
-// CART
+// CSRF TOKEN
 const getToken = (name) => {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -15,6 +15,8 @@ const getToken = (name) => {
 }
 let csrftoken = getToken('csrftoken');
 
+
+// COOKIE
 const getCookie = (name) => {
     let cookieArr = document.cookie.split(';');
 
@@ -27,21 +29,26 @@ const getCookie = (name) => {
     return null;
 }
 
+// CART
 let cart = JSON.parse(getCookie('cart'));
 if (cart == undefined) {
     cart = {};
     document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
 }
 
-const updateCookieCart = (product_id, action) => {
-    if(action == 'add') {
-        if(cart[product_id] == undefined) {
-            cart[product_id] = {'quantity': 1}; 
-        }else {
-            cart[product_id]['quantity'] += 1;
-        }
+const addCartAction = (product_id) => {
+    if(cart[product_id] == undefined) {
+        cart[product_id] = {'quantity': 1}; 
+    }else {
+        cart[product_id]['quantity'] += 1;
     }
-    if(action == 'remove') {
+}
+
+const updateCookieCart = (product_id, action) => {
+    if(action === 'add') {
+        addCartAction(product_id);
+    }
+    if(action === 'remove') {
         cart[product_id]['quantity'] -= 1
         if(cart[product_id]['quantity'] <= 0) {
             delete cart[product_id];
@@ -51,40 +58,54 @@ const updateCookieCart = (product_id, action) => {
     window.location.reload();
 }
 
-const updateCart = async (product_id, action) => {
-    try {
-        const response = await fetch('/update_item', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            }, 
-            body: JSON.stringify({ product_id: product_id, action: action })
-        });
-        if(!response.ok) {
-            alert('Sorry, there\'s been an error. Please try again.');
-            throw new Error(`${response.status}`);
-        }
-        await response.json();
-        window.location.reload();
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 if(document.querySelector('.update-cart')) {
-    const updateBtns = document.querySelectorAll('.update-cart');
-    updateBtns.forEach((btn) => {
+    const updateCartBtns = document.querySelectorAll('.update-cart');
+    updateCartBtns.forEach((btn) => {
         btn.addEventListener('click', () => {
             let product_id = btn.dataset.product;
             let action = btn.dataset.action;
 
-            if(user == 'AnonymousUser') {
-                updateCookieCart(product_id, action);
-            }else {
-                updateCart(product_id, action);
+            updateCookieCart(product_id, action);
+        });
+    });
+}
+
+
+// WISHLIST
+let wishlist = JSON.parse(getCookie('wishlist'));
+if (wishlist == undefined) {
+    wishlist = {};
+    document.cookie = 'wishlist=' + JSON.stringify(wishlist) + ';domain=;path=/;secure;http-only;samesite=lax';
+}
+
+const updateWishlist = (product_id, action) => {
+    switch(action) {
+        case 'add':
+            if(wishlist[product_id] == undefined) {
+                wishlist[product_id] = {'quantity': 1};
             }
+            break;
+        case 'add-to-cart':
+            addCartAction(product_id);
+            document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
+            delete wishlist[product_id];
+            break;
+
+        case 'remove':
+            break;
+    }
+    document.cookie = 'wishlist=' + JSON.stringify(wishlist) + ';domain=;path=/;secure;http-only;samesite=lax;';
+    window.location.reload();
+}
+
+if(document.querySelector('.update-wishlist')) {
+    const addToWishlistBtns = document.querySelectorAll('.update-wishlist');
+    addToWishlistBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            let product_id = btn.dataset.product;
+            let action = btn.dataset.action;
+
+            updateWishlist(product_id, action);
         });
     });
 }
@@ -100,6 +121,7 @@ if(document.querySelector('.alert-message')) {
         }, 5000);
     });
 }
+
 
 // ANIMATIONS
 const scrollElements = document.querySelectorAll('.js-scroll');

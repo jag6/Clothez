@@ -52,8 +52,8 @@
 .details-action:nth-child(4) { margin-top: .5rem; }
 .details-action div, .details-action form button { width: 100%; }
 .details-action div:nth-child(3), .details-action div:nth-child(4) { margin-top: 1rem; }
-.details-action div:nth-child(3) button { background-color: #FCCA3F; }
-.details-action div:nth-child(4) button { background-color: #C73C32; }
+.cart-btn { background-color: #FCCA3F; }
+.wishlist-btn { background-color: #D43F35; }
 .details-action button { font-weight: 600; }
 .details-action button:hover { cursor: pointer; opacity: .8; }
 

@@ -36,12 +36,11 @@
 .cart-quantity-btns { display: flex; flex-direction: column; }
 .cart-quantity-btns span { font-size: 24px; line-height: 24px; margin-left: 1rem; }
 .cart-quantity-btns span:hover { cursor: pointer; }
-/* .delete-btn { 
-    background-color: #e5e5e5; 
-    margin-left: .5rem; padding: .25rem .5rem; 
-    border-radius: 10px;  
-    font-size: 14px; 
-} */
+.cart-price { 
+    display: flex;     
+    justify-content: right;
+    width: 100px; 
+}
 
 .cart-action { 
     height: 11.5rem; width: 25%; 
@@ -65,7 +64,9 @@
 /*WISHLIST*/
 
 .wishlist-container .cart-list { width: 100%; }
-
+.wishlist-btns div { margin: 0 4px; }
+.wishlist-btns div:nth-child(1) button { background-color: #FCCA3F; }
+.wishlist-btns div:nth-child(2) button { background-color: #666; }
 @media only screen and (max-width: 900px) {    
     .cart-list { margin-right: 0%; }
     .cart-list, .cart-action { width: 100%; }  
@@ -74,7 +75,9 @@
 @media only screen and (max-width: 576px) {
     .cart-img { margin-bottom: 1rem; }
     .cart-name { margin-top: -1rem; }  
-    .cart-action { padding: 1rem 5 ; } 
+    .cart-price { width: auto; }
+    .cart-action { padding: 1rem 5%; } 
+    .wishlist-btns { margin-top: 1rem; }
 }
 
 

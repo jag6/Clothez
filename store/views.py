@@ -6,7 +6,7 @@ import datetime
 from . models import *
 from . forms import * 
 from . options import price_options
-from .utils import cartData, guestOrder
+from . utils import *
 
 def index(request):
 	# metadata
@@ -99,15 +99,24 @@ def wishlist(request):
 	css = 'cart'
 
 	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
+	cart_data = cartData(request)
+	cart_items = cart_data['cart_items']
+
+	# wishlist
+	wishlist_data = wishlistData(request)
+	wishlist_items = wishlist_data['wishlist_items']
+	order = wishlist_data['order']
+	items = wishlist_data['items']
 
 	context = {
 		'title': title,
 		'description': description,
 		'url': url,
 		'css': css,
-		'cart_items': cart_items
+		'cart_items': cart_items,
+		'wishlist_items': wishlist_items,
+		'order': order,
+		'items': items
 	}
 
 	return render(request, 'store/wishlist.html', context)
@@ -164,49 +173,49 @@ def checkout(request):
 	return render(request, 'store/checkout.html', context)
 		
 
-def updateItem(request):
-	if request.method == 'POST':
-		data = json.loads(request.body)
-		product_id = data['product_id']
-		action = data['action']
-		print('Action:', action)
-		print('Product:', product_id)
-
-		customer = request.user.customer
-		product = Product.objects.get(id=product_id)
-		order, created = Order.objects.get_or_create(customer=customer, complete=False)
-
-		order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
-
-		if action == 'add':
-			order_item.quantity = (order_item.quantity + 1)
-		elif action == 'remove':
-			order_item.quantity = (order_item.quantity - 1)
-
-		order_item.save()
-
-		if order_item.quantity <= 0:
-			order_item.delete()
-
-		return JsonResponse('Item was added', safe=False)
-
 def processOrder(request):
 	if request.method == 'POST':
 		transaction_id = datetime.datetime.now().timestamp()
 		data = json.loads(request.body)
 
 		if request.user.is_authenticated:
+			cookie_data = cookieCart(request)
+			items = cookie_data['items']
+
 			customer = request.user.customer
-			order, created = Order.objects.get_or_create(customer=customer, complete=False)
+			order = Order.objects.create(customer=customer, complete=False)
+
+			for item in items:
+				product = Product.objects.get(id=item['id'])
+				order_item = OrderItem.objects.create(
+					product=product,
+					order=order,
+					quantity=(item['quantity'] if item['quantity'] > 0 else -1*item['quantity'])
+				)
 		else:
-			customer, order = guestOrder(request, data)
+			first_name = data['form']['first_name']
+			last_name = data['form']['last_name']
+			email = data['form']['email']
+
+			cookie_data = cookieCart(request)
+			items = cookie_data['items']
+
+			customer, created = Customer.objects.get_or_create(first_name=first_name, last_name=last_name, email=email)
+			customer.save()
+
+			order = Order.objects.create(customer=customer, complete=False)
+
+			for item in items:
+				product = Product.objects.get(id=item['id'])
+				order_item = OrderItem.objects.create(
+					product=product,
+					order=order,
+					quantity=(item['quantity'] if item['quantity'] > 0 else -1*item['quantity'])
+				)
 
 		total = float(data['form']['total'])
-		order.transaction_id = transaction_id
-
 		if total == order.get_cart_total:
 			order.complete = True
-		order.save()
 
 		if order.shipping == True:
 			ShippingAddress.objects.create(
@@ -217,5 +226,8 @@ def processOrder(request):
 				state=data['shipping']['state'],
 				zipcode=data['shipping']['zipcode'],
 			)
+
+		order.transaction_id = transaction_id
+		order.save()
 
 		return JsonResponse('Payment submitted..', safe=False)
