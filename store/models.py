@@ -16,6 +16,15 @@ class Customer(models.Model):
 	def __str__(self):
 		return self.name
 
+class Review(models.Model):
+	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+	name = models.CharField(max_length=100, null=True)
+	rating = models.IntegerField(null=True)
+	comment = models.TextField()
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return self.customer.name
 
 class Product(models.Model):
 	name = models.CharField(max_length=200, null=True)
@@ -28,6 +37,9 @@ class Product(models.Model):
 	image = models.ImageField(upload_to='products/', null=True)
 	count_in_stock = models.IntegerField(null=True, blank=True)
 	is_published = models.BooleanField(default=True)
+	created_at = models.DateTimeField(null=True, auto_now_add=True)
+	rating = models.IntegerField(null=True, blank=True)
+	reviews = models.ForeignKey(Review, on_delete=models.CASCADE, null=True, blank=True)
 
 	def __str__(self):
 		return self.name
@@ -45,6 +57,7 @@ class Order(models.Model):
 	date_ordered = models.DateTimeField(auto_now_add=True)
 	complete = models.BooleanField(default=False)
 	transaction_id = models.CharField(max_length=100, null=True)
+	is_shipped = models.BooleanField(default=False)
 
 	def __str__(self):
 		return str(self.id)
@@ -68,13 +81,12 @@ class Order(models.Model):
 	def get_cart_items(self):
 		order_items = self.orderitem_set.all()
 		total = sum([item.quantity for item in order_items])
-		return total 
+		return total
 
 class OrderItem(models.Model):
-	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+	product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
 	order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
-	quantity = models.IntegerField(default=0, null=True, blank=True)
-	date_added = models.DateTimeField(auto_now_add=True)
+	quantity = models.IntegerField(default=1)
  
 	def __str__(self):
 		return self.product.name
@@ -83,6 +95,9 @@ class OrderItem(models.Model):
 	def get_total(self):
 		total = self.product.price * self.quantity
 		return total
+	
+	class Meta:
+		unique_together = ('order', 'product')
 
 class ShippingAddress(models.Model):
 	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)

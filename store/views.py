@@ -21,14 +21,20 @@ def index(request):
 	cart_items = data['cart_items']
 
 	# products
-	products = Product.objects.all()
+	latest_products = Product.objects.order_by('created_at').filter(is_published=True)[:6]
+	mens_products = Product.objects.order_by('category', 'name').filter(gender='Men\'s', is_published=True)
+	womens_products = Product.objects.order_by('category', 'name').filter(gender='Women\'s', is_published=True)
+	unisex_products = Product.objects.order_by('category', 'name').filter(gender='Unisex', is_published=True)
 
 	context = {
 		'title': title,
 		'description': description,
 		'banner': banner,
 		'cart_items': cart_items,
-		'products': products, 
+		'latest_products': latest_products, 
+		'mens_products': mens_products,
+		'womens_products': womens_products,
+		'unisex_products': unisex_products
 	}
 	return render(request, 'store/index.html', context)
 

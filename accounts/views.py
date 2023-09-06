@@ -90,7 +90,7 @@ def myAccount(request):
 		orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
 
 		#order items
-		items = OrderItem.objects.all()
+		items = OrderItem.objects.order_by('order').filter(complete=True)
 		
 		return render(request, 'accounts/my-account.html', {'form': form, 'cart_items': cart_items, 'orders': orders, 'items': items})
 	

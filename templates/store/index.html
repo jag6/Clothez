@@ -9,6 +9,37 @@
             <h1>{{banner.text}}</h1>
         </section>
     </section>
-    {% include 'components/products-container.html' %}
+    <section class="products-container">
+        <section class="products-container-header"><h2>Latest Products</h2></section>
+        <ul class="products">
+            {% for product in latest_products %}
+                {% include 'components/products-li.html' %}
+            {% endfor %}
+        </ul>
+    </section>
+    <section class="products-container">
+        <section class="products-container-header"><h2>Men's</h2></section>
+        <ul class="products">
+            {% for product in mens_products %}
+                {% include 'components/products-li.html' %}
+            {% endfor %}
+        </ul>
+    </section>
+    <section class="products-container">
+        <section class="products-container-header"><h2>Women's</h2></section>
+        <ul class="products">
+            {% for product in womens_products %}
+                {% include 'components/products-li.html' %}
+            {% endfor %}
+        </ul>
+    </section>
+    <section class="products-container">
+        <section class="products-container-header"><h2>Unisex</h2></section>
+        <ul class="products">
+            {% for product in unisex_products %}
+                {% include 'components/products-li.html' %}
+            {% endfor %}
+        </ul>
+    </section>
 
 {% endblock %}

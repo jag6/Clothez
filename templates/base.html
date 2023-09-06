@@ -73,8 +73,8 @@
                             </a>
                         </li>
                     {% else %}
-                        <li><a href="{% url 'sign-up' %}">SIGN-UP</a></li>
-                        <li><a href="{% url 'sign-in' %}">SIGN-IN</a></li>
+                        <li class="ul-no-mobile"><a href="{% url 'sign-up' %}">SIGN-UP</a></li>
+                        <li class="ul-no-mobile"><a href="{% url 'sign-in' %}">SIGN-IN</a></li>
                     {% endif %}
                     <li>
                         <a href="{% url 'wishlist' %}">
@@ -104,7 +104,7 @@
             </form>
         </div>
     </header>
-    <main>
+    <main {% if not user.is_authenticated %}class="main-ul-mobile"{% endif %}>
         {% block content %}
         
         {% endblock content %}
@@ -121,10 +121,14 @@
         </ul>
         <button type="button" aria-label="Close Chat Popup Button" class="chat-cancel" id="close-popup">CLOSE</button>
     </div>
-    <footer>
+    <footer {% if not user.is_authenticated %}class="footer-ul-mobile"{% endif %}>
         <div><p>Clothez&copy; 2023</p></div>
         <nav class="nav">
             <ul class="page-links">
+                {% if not user.is_authenticated %}
+                    <li class="ul-mobile"><a href="{% url 'sign-up' %}">SIGN-UP</a></li>
+                    <li class="ul-mobile"><a href="{% url 'sign-in' %}">SIGN-IN</a></li>       
+                {% endif %}
                 <li><a href="{% url 'about' %}">ABOUT</a></li>
                 <li><a href="{% url 'contact' %}">CONTACT</a></li>
                 <li><a href="{% url 'privacy-policy' %}">PRIVACY POLICY</a></li>
