@@ -7,6 +7,8 @@ This is an eCommerce template that allows for both signed-in and guest add to ca
   - Cart
     - add to cart only if item is in stock
     - increase/decrease item quantity
+  - Wishlist
+    - move item from wishlist to cart
   - Search
   - Customer Account Page
       - change password
@@ -19,5 +21,3 @@ This is an eCommerce template that allows for both signed-in and guest add to ca
   - Orders
     - send email upon transaction completion
     - send email when order ships
-  - Wishlist
-    - move item from wishlist to cart
