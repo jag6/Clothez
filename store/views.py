@@ -50,7 +50,7 @@ def search(request):
 
 	#search info
 	# search_options = Product.objects.distinct('category', 'type', 'gender')
-	queryset_list = Product.objects.order_by('-name')
+	queryset_list = Product.objects.order_by('category', 'name').filter(is_published=True)
 
 	if 'q' in request.GET:
 		q = request.GET['q']
@@ -86,13 +86,17 @@ def product(request, product_id):
 	data = cartData(request)
 	cart_items = data['cart_items']
 
+	# get product, check for product as order item in customer order
 	product = get_object_or_404(Product, pk = product_id)
+	orders = Order.objects.filter(customer=request.user.customer).first()
+	order_item = OrderItem.objects.filter(order=orders, product=product).first()
 
 	context = {
 		'css': css,
 		'url': url,
 		'product': product,
-		'cart_items': cart_items
+		'cart_items': cart_items,
+		'order_item': order_item
 	}
 
 	return render(request, 'store/product.html', context)

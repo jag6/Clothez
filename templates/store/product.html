@@ -60,7 +60,7 @@
             </div>
         </section>
         <section id="reviews-container" class="reviews-container">
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and order_item %}
                 <section id="review-box" class="form-container box-shadow">
                     <section><h2><span><i class="fa-solid fa-pen-to-square"></i></span>Write a Review</h2></section>
                     <form action="" method="post" id="review-form" class="form review-form">
@@ -77,6 +77,10 @@
                         <textarea required name="comment" id="comment" cols="30" rows="5"></textarea>
                         <button type="submit" class="primary bold">SUBMIT</button>
                     </form>
+                </section>
+            {% elif user.is_authenticated and not order_item %}
+                <section class="no-review">
+                    <h2 class="link-span">Can Only Leave Review After Purchase</h2>
                 </section>
             {% else %}
                 <section class="no-review">

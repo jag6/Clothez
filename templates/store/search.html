@@ -19,5 +19,24 @@
             {% endfor %}
         </ul>      
     </div>
-    {% include 'components/products-container.html' %}
+    <section class="products-container search-container">
+        <ul class="products">
+            {% for product in products %}
+                <li>
+                    <a href="{% url 'product' product.id %}" target="_blank" class="product box-shadow">                        
+                        <div class="product-img">
+                            <img src="{{product.image.url}}" alt="{{product.name}}">
+                        </div> 
+                        <section class="product-name">
+                            <h4>{{product.name}}</h4> 
+                        </section>
+                        {% include 'components/product-rating.html' %}
+                        <div class="product-price">
+                            <p>${{product.price|floatformat:2}}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
 {% endblock %}

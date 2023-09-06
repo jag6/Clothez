@@ -34,19 +34,16 @@
                         <li>
                             <div><p>{{order.date_ordered}}</p></div>
                             <div><p>Here</p></div>
+                            <ul>
+                                {% for item in order.get_order_items %}
+                                    <li>{{item.product}}</li>
+                                {% endfor %}
+                            </ul>
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
                 <section><h2>No Orders</h2></section>
-            {% endif %}
-            {% if items %}
-                <ul>
-                    {% for item in items %}
-                        <li>{{item.order}}</li>
-                        <li>{{item.product}}</li>
-                    {% endfor %}
-                </ul>
             {% endif %}
         </section>
         <section class="my-account-user-info form-container box-shadow">
