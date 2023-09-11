@@ -11,12 +11,13 @@ This is an eCommerce template that allows for both signed-in and guest add to ca
     - move item from wishlist to cart
   - Search
   - Customer Account Page
-      - change password
-      - view orders
+    - change password
+    - view orders
+  - Product Reviews
+    - only if signed-in and have purchase history
 
 ### Currently Implementing
   - Product Reviews
-    - only if signed-in and have purchase history
     - leave rating and comment
   - Orders
     - send email upon transaction completion
