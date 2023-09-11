@@ -29,14 +29,18 @@ const getCookie = (name) => {
     return null;
 }
 
-// CART
+// CART AND WISHLIST
 let cart = JSON.parse(getCookie('cart'));
+const updateCart = () => {
+    const update = document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
+    return update;
+}
 if (cart == undefined) {
     cart = {};
-    document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
+    updateCart();
 }
 
-const addCartAction = (product_id) => {
+const addToCart = (product_id) => {
     if(cart[product_id] == undefined) {
         cart[product_id] = {'quantity': 1}; 
     }else {
@@ -44,68 +48,58 @@ const addCartAction = (product_id) => {
     }
 }
 
-const updateCookieCart = (product_id, action) => {
-    if(action === 'add') {
-        addCartAction(product_id);
-    }
-    if(action === 'remove') {
-        cart[product_id]['quantity'] -= 1
-        if(cart[product_id]['quantity'] <= 0) {
-            delete cart[product_id];
-        }
-    }
-    document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
-    window.location.reload();
-}
-
-if(document.querySelector('.update-cart')) {
-    const updateCartBtns = document.querySelectorAll('.update-cart');
-    updateCartBtns.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            let product_id = btn.dataset.product;
-            let action = btn.dataset.action;
-
-            updateCookieCart(product_id, action);
-        });
-    });
-}
-
-
-// WISHLIST
 let wishlist = JSON.parse(getCookie('wishlist'));
+const updateWishlist = () => {
+    const update = document.cookie = 'wishlist=' + JSON.stringify(wishlist) + ';domain=;path=/;secure;http-only;samesite=lax';
+    return update;
+}
 if (wishlist == undefined) {
     wishlist = {};
-    document.cookie = 'wishlist=' + JSON.stringify(wishlist) + ';domain=;path=/;secure;http-only;samesite=lax';
+    updateWishlist();   
 }
 
-const updateWishlist = (product_id, action) => {
+const updateCartAndWishlist = (product_id, action) => {
     switch(action) {
-        case 'add':
+        case 'add-to-cart':
+            addToCart(product_id);
+            updateCart();
+            break;
+        case 'remove-from-cart':
+            cart[product_id]['quantity'] -= 1
+            if(cart[product_id]['quantity'] <= 0) {
+                delete cart[product_id];
+            }
+            updateCart();
+            break;
+        case 'add-to-wishlist':
             if(wishlist[product_id] == undefined) {
                 wishlist[product_id] = {'quantity': 1};
             }
+            updateWishlist();
             break;
-        case 'add-to-cart':
-            addCartAction(product_id);
-            document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
+        case 'add-to-cart-from-wishlist':
+            addToCart(product_id);
+            updateCart();
             delete wishlist[product_id];
+            updateWishlist();
             break;
 
-        case 'remove':
+        case 'remove-from-wishlist':
+            delete wishlist[product_id];
+            updateWishlist();
             break;
     }
-    document.cookie = 'wishlist=' + JSON.stringify(wishlist) + ';domain=;path=/;secure;http-only;samesite=lax;';
     window.location.reload();
 }
 
-if(document.querySelector('.update-wishlist')) {
-    const addToWishlistBtns = document.querySelectorAll('.update-wishlist');
-    addToWishlistBtns.forEach((btn) => {
+if(document.querySelector('.update-btn')) {
+    const updateBtns = document.querySelectorAll('.update-btn');
+    updateBtns.forEach((btn) => {
         btn.addEventListener('click', () => {
             let product_id = btn.dataset.product;
             let action = btn.dataset.action;
 
-            updateWishlist(product_id, action);
+            updateCartAndWishlist(product_id, action);
         });
     });
 }

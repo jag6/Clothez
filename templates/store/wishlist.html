@@ -22,8 +22,8 @@
                             </div>
                             <div class="item-name"><a href="{% url 'product' item.product.id %}">{{item.product.name}}</a></div>
                             <div class="wishlist-btns">
-                                <div><button data-product="{{item.product.id}}" data-action="add-to-cart" aria-label="Add to Cart Button" type="submit" class="update-wishlist">Add to Cart</button></div>
-                                <div><button data-product="{{item.product.id}}" data-action="remove" aria-label="Delete from Wishlist Button" type="submit" class="update-wishlist">Delete</button></div>
+                                <div><button data-product="{{item.product.id}}" data-action="add-to-cart-from-wishlist" aria-label="Add to Cart Button" type="submit" class="update-btn">Add to Cart</button></div>
+                                <div><button data-product="{{item.product.id}}" data-action="remove-from-wishlist" aria-label="Delete from Wishlist Button" type="submit" class="update-btn">Delete</button></div>
                             </div>
                             <div class="cart-price">
                                 {{item.product.price | floatformat:2}}

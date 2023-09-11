@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load markdownify %}
 
-{% block title %}{{product.name}}{% endblock %}
+{% block title %}{{product.name}} - Clothez{% endblock %}
 
-{% block canonical %}{{url}}{{product.id}}{% endblock %}
+{% block canonical %}/{{product.id}}{% endblock %}
 
 {% block description %}{{product.description}}{% endblock %}
 
@@ -14,7 +14,7 @@
 {% block meta_title %}{{product.name}}{% endblock %}
 {% block meta_description %}{{product.description}}{% endblock %}
 {% block meta_image %}{{product.image.url}}{% endblock %}
-{% block meta_url %}{{url}}{{product.id}}{% endblock %}
+{% block meta_url %}/{{product.id}}{% endblock %}
 
 {% block content %}
     <section class="product-container">
@@ -51,11 +51,11 @@
                 </div>
                 {% if product.count_in_stock > 0 or product.digital == True %}
                     <div>
-                        <button data-product="{{product.id}}" data-action="add" class="fw primary bold cart-btn update-cart">ADD TO CART</button>
+                        <button data-product="{{product.id}}" data-action="add-to-cart" class="fw primary bold cart-btn update-btn">ADD TO CART</button>
                     </div>
                 {% endif %}
                 <div>
-                    <button data-product="{{product.id}}" data-action="add" class="fw bold wishlist-btn update-wishlist">ADD TO WISHLIST</button>
+                    <button data-product="{{product.id}}" data-action="add-to-wishlist" class="fw bold wishlist-btn update-btn">ADD TO WISHLIST</button>
                 </div>
             </div>
         </section>
@@ -75,7 +75,7 @@
                         </select>
                         <label for="comment">Comment</label>
                         <textarea required name="comment" id="comment" cols="30" rows="5"></textarea>
-                        <button type="submit" class="primary bold">SUBMIT</button>
+                        <button aria-label="Submit Product Review Buttonx" type="submit" class="primary bold">SUBMIT</button>
                     </form>
                 </section>
             {% elif user.is_authenticated and not order_item %}
@@ -89,13 +89,13 @@
             {% endif %}
             <section class="reviews">
                 <div class="reviews-header"><h2>Reviews</h2></div>
-                {% if not product.reviews %}
+                {% if not reviews %}
                     <section><h3>No Reviews</h3></section>
                 {% else %}
                     <ul class="reviews">
                         {% for review in reviews %}
                             <li>
-                                <section><h3>{{review.name}}</h3></section>
+                                <section><h3>{{review.customer.name}}</h3></section>
                                 <div class="rating-container">
                                     <div class="review-rating"></div>
                                     <section><h4>{{review.created_at}};</h4></section>

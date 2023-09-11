@@ -16,16 +16,6 @@ class Customer(models.Model):
 	def __str__(self):
 		return self.name
 
-class Review(models.Model):
-	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
-	name = models.CharField(max_length=100, null=True)
-	rating = models.IntegerField(null=True)
-	comment = models.TextField()
-	created_at = models.DateTimeField(auto_now_add=True)
-
-	def __str__(self):
-		return self.customer.name
-
 class Product(models.Model):
 	name = models.CharField(max_length=200, null=True)
 	description = models.TextField(null=True)
@@ -39,7 +29,6 @@ class Product(models.Model):
 	is_published = models.BooleanField(default=True)
 	created_at = models.DateTimeField(null=True, auto_now_add=True)
 	rating = models.IntegerField(null=True, blank=True)
-	reviews = models.ForeignKey(Review, on_delete=models.CASCADE, null=True, blank=True)
 
 	def __str__(self):
 		return self.name
@@ -51,6 +40,16 @@ class Product(models.Model):
 		except:
 			url = ''
 		return url
+	
+class Review(models.Model):
+	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+	product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+	rating = models.IntegerField(null=True)
+	comment = models.TextField()
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return self.customer.name
 
 class Order(models.Model):
 	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
@@ -99,9 +98,6 @@ class OrderItem(models.Model):
 	def get_total(self):
 		total = self.product.price * self.quantity
 		return total
-	
-	class Meta:
-		unique_together = ('order', 'product')
 
 class ShippingAddress(models.Model):
 	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)

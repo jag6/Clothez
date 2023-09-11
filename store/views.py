@@ -79,27 +79,39 @@ def search(request):
 
 def product(request, product_id):
 	# metadata
-	url = '/'
 	css = 'product'
 
 	# cart
 	data = cartData(request)
 	cart_items = data['cart_items']
 
-	# get product, check for product as order item in customer order
+	# product info
 	product = get_object_or_404(Product, pk = product_id)
-	orders = Order.objects.filter(customer=request.user.customer).first()
-	order_item = OrderItem.objects.filter(order=orders, product=product).first()
 
-	context = {
-		'css': css,
-		'url': url,
-		'product': product,
-		'cart_items': cart_items,
-		'order_item': order_item
-	}
+	# reviews
+	reviews = Review.objects.filter(product=product)
 
-	return render(request, 'store/product.html', context)
+	if request.user.is_authenticated:
+		# check for product as order item in customer order
+		orders = Order.objects.filter(customer=request.user.customer).first()
+		order_item = OrderItem.objects.filter(order=orders, product=product).first()
+
+		context = {
+			'css': css,
+			'cart_items': cart_items,
+			'product': product,
+			'order_item': order_item,
+			'reviews': reviews
+		}
+		return render(request, 'store/product.html', context)
+	else:
+		context = {
+			'css': css,
+			'cart_items': cart_items,
+			'product': product,
+			'reviews': reviews
+		}
+		return render(request, 'store/product.html', context)
 
 def wishlist(request):
 	# metadata
