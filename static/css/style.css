@@ -417,11 +417,11 @@ aside {
 }
 .product-img { display: flex; justify-content: center; }
 .product-img img { max-width: 240px; max-height: 10rem; margin-top: 1rem; }
-.product-name h4 { font-size: 18px ;line-height: 24px; color: #111; }
+.product-name h4 { font-size: 18px; line-height: 24px; color: #111; }
 .product-price p { font-size: 16px; line-height: 24px; font-weight: 700; color: #111; }
 
-.rating { color: #FCCA3F;font-size: 16px;line-height: 32px; }
-.rating span:last-child { color: #111;font-size: 16px;line-height: 24px;font-weight: 700;margin-left: .5rem; }
+.rating, .review-rating span i { color: #FCCA3F; font-size: 16px; line-height: 32px; }
+.rating span:last-child { color: #111; font-size: 16px; line-height: 24px; font-weight: 700; margin-left: .5rem; }
 
 .search-container .products { grid-template-columns: repeat(auto-fit, minmax(auto, 272px)); justify-content: center; }
 

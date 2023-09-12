@@ -2,7 +2,7 @@
     <span>
         <i class="
             {% if product.rating >= 1 %}
-                fa-solid-fa-star
+                fa-solid fa-star
             {% elif product.rating >= .5 %}
                 fa-solid fa-star-half
             {% else %}
@@ -12,7 +12,7 @@
     <span>
         <i class="  
             {% if product.rating >= 2 %}
-                fa-solid-fa-star
+                fa-solid fa-star
             {% elif product.rating >= 1.5 %} 
                 fa-solid fa-star-half
             {% else %}
@@ -22,7 +22,7 @@
     <span>
         <i class="  
             {% if product.rating >= 3 %}
-                fa-solid-fa-star
+                fa-solid fa-star
             {% elif product.rating >= 2.5 %} 
                 fa-solid fa-star-half
             {% else %}
@@ -32,7 +32,7 @@
     <span>
         <i class="  
             {% if product.rating >= 4 %}
-                fa-solid-fa-star
+                fa-solid fa-star
             {% elif product.rating >= 3.5 %} 
                 fa-solid fa-star-half
             {% else %}
@@ -42,7 +42,7 @@
     <span>
         <i class="  
             {% if product.rating >= 5 %}
-                fa-solid-fa-star
+                fa-solid fa-star
             {% elif product.rating >= 4.5 %}
                 fa-solid fa-star-half
             {% else %}
@@ -50,12 +50,12 @@
             {% endif %}"></i>
     </span>
     <span>
-        {% if not product.rating.num_reviews  %}
+        {% if not product.num_reviews  %}
             No reviews
-        {% elif product.ratingviews == 1 %}
+        {% elif product.num_reviews == 1 %}
             1 Review
         {% else %}
-            {{product.num_reviews}}: Reviews
+            {{product.num_reviews}} Reviews
         {% endif %}
     </span>
 </div>

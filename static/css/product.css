@@ -60,29 +60,13 @@
 
 /*REVIEWS*/
 
-.reviews-container { 
+.review-box-reviews-container { 
     margin-top: 5rem; margin-bottom: 4rem; 
-    display: flex; flex-flow: row wrap; justify-content: space-between; 
+    display: flex; flex-flow: row wrap; justify-content: space-between; align-items: flex-start;
 }
-.reviews-container .form-container, .reviews { width: 50%; max-width: 450px; }
-.reviews-container .form-container { max-width: 450px; }
-.reviews-container .form-container .form { 
-    margin: 0 auto; 
-    padding: 0 1% 1.5rem 1%; 
-    border-radius: 20px; 
-}
-.reviews-container select, .reviews-container textarea, .reviews-container button { border-radius: 10px !important; }
-
-.reviews { margin: 0 auto; justify-self: center; }
-.reviews div p { font-size: 20px; line-height: 40px; }
-.reviews .line { border-bottom: 2px solid #c0c0c0; margin: 2rem 0; }
-
-.reviews-header { margin-bottom: 3rem; text-align: center; }
-.reviews section { text-align: center; }
-
-.rating-container > div { font-size: 16px; line-height: 24px; }
-.rating-container div:last-of-type { margin-top: 2rem; }
-
+.review-box, .reviews-container { width: 50%; }
+.review-box .form-container { max-width: 450px; margin: 0; }
+.review-box .form { padding: 0 1% 1.5rem 1%; }
 .review-form label { 
     margin-top: 1rem; 
     font-size: 20px; line-height: 32px; 
@@ -92,16 +76,25 @@
     padding: .5rem; 
     border-radius: 20px; 
 }
+.review-box select, .review-box textarea, .review-box button { border-radius: 10px !important; }
+.no-review h2 { text-align: center;}
 
-.no-review { margin: 0 auto; justify-content: center; }
+.reviews-header { margin-bottom: 2rem; }
+.reviews h3 { font-size: 20px; line-height: 32px; }
+.reviews h4 { font-size: 14px; line-height: 24px; }
 
+.reviews .line { border-bottom: 2px solid #c0c0c0; margin: 1rem 0 2rem 0; }
 
+@media only screen and (max-width: 1024px) {
+    .review-box, .reviews-container { width: 100%; }
+    .review-box .form-container { margin: 0 auto; }
+    .reviews-container { margin-top: 4rem; } 
+}
 @media only screen and (max-width: 991px) {  
     .details { justify-content: center; }
     .img-info, .details-action, .details-img,  .details-info { width: 100%; }     
     .details-action { margin-top: 2rem; } }
 @media only screen and (max-width: 576px) { 
-    .reviews-container .form-container, .reviews { width: 100%; }
-    .reviews { margin-top: 4rem; } 
     .details-action { padding: 1rem 5%; } 
+    .review-box .form { padding: 0 5% 1.5rem 5%; }
 }

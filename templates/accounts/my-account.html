@@ -35,7 +35,7 @@
                             <div><p>{{order.date_ordered}}</p></div>
                             <div><p>Here</p></div>
                             <ul>
-                                {% for item in order.get_order_items %}
+                                {% for item in order.my_order_items %}
                                     <li>{{item.product}}</li>
                                 {% endfor %}
                             </ul>

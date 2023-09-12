@@ -83,7 +83,6 @@ const updateCartAndWishlist = (product_id, action) => {
             delete wishlist[product_id];
             updateWishlist();
             break;
-
         case 'remove-from-wishlist':
             delete wishlist[product_id];
             updateWishlist();

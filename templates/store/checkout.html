@@ -35,10 +35,6 @@
                             <input required class="form-control" type="text" name="zipcode" placeholder="Zip code...">
                         </div>
                     </section>
-                {% else %}
-                    {% if user.is_authenticated %}
-                        <section id="proceed-info" class="proceed-info"><p>Shipping information is not required for this item.<br> Please click the button below to open up PayPal and proceed with checkout.</p></section>
-                    {% endif %}
                 {% endif %}
                 <button aria-label="Continue Checkout Button" required id="form-button" class="btn btn-success btn-block" type="submit">CONTINUE</button>
             </form>

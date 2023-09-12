@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
+from django.contrib import messages
 # from django.contrib.postgres.search import SearchQuery
 import json
 import datetime
@@ -78,40 +79,101 @@ def search(request):
 	return render(request, 'store/search.html', context)
 
 def product(request, product_id):
-	# metadata
-	css = 'product'
+	if request.method == 'GET':
+		# metadata
+		css = 'product'
 
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
+		# cart
+		data = cartData(request)
+		cart_items = data['cart_items']
 
-	# product info
-	product = get_object_or_404(Product, pk = product_id)
+		# product info
+		product = get_object_or_404(Product, pk=product_id)
 
-	# reviews
-	reviews = Review.objects.filter(product=product)
+		# reviews
+		reviews = Review.objects.filter(product=product)
 
-	if request.user.is_authenticated:
-		# check for product as order item in customer order
-		orders = Order.objects.filter(customer=request.user.customer).first()
-		order_item = OrderItem.objects.filter(order=orders, product=product).first()
 
-		context = {
-			'css': css,
-			'cart_items': cart_items,
-			'product': product,
-			'order_item': order_item,
-			'reviews': reviews
-		}
-		return render(request, 'store/product.html', context)
-	else:
-		context = {
-			'css': css,
-			'cart_items': cart_items,
-			'product': product,
-			'reviews': reviews
-		}
-		return render(request, 'store/product.html', context)
+		if request.user.is_authenticated:
+			# check for product as order item in customer order
+			orders = Order.objects.filter(customer=request.user.customer).first()
+			order_item = OrderItem.objects.filter(order=orders, product=product).first()
+
+			# check if user already submitted review
+			left_review = Review.objects.filter(customer=request.user.customer, product=product).first()
+
+			# form
+			form = ReviewForm()
+
+			context = {
+				'form': form, 
+				'css': css, 
+				'cart_items': cart_items, 
+				'product': product, 
+				'order_item': order_item, 
+				'left_review': left_review, 
+				'reviews': reviews
+			}
+
+			return render(request, 'store/product.html', context)
+		else:
+			context = {
+				'css': css,
+				'cart_items': cart_items,
+				'product': product,
+				'reviews': reviews
+			}
+			return render(request, 'store/product.html', context)
+	
+	if request.method == 'POST':
+		# metadata
+		css = 'product'
+
+		# cart
+		data = cartData(request)
+		cart_items = data['cart_items']
+
+		# product info
+		product = get_object_or_404(Product, pk=product_id)
+
+		# reviews
+		reviews = Review.objects.filter(product=product).order_by('-created_at')
+
+		if request.user.is_authenticated:
+			# check for product as order item in customer order
+			orders = Order.objects.filter(customer=request.user.customer).first()
+			order_item = OrderItem.objects.filter(order=orders, product=product).first()
+
+			# check if user already submitted review
+			left_review = Review.objects.filter(customer=request.user.customer, product=product).first()
+
+			# form
+			form = ReviewForm(request.POST)
+
+			context = {
+				'form': form, 
+				'css': css, 
+				'cart_items': cart_items, 
+				'product': product, 
+				'order_item': order_item, 
+				'left_review': left_review, 
+				'reviews': reviews
+			}
+
+			# product info
+			product = get_object_or_404(Product, pk = product_id)
+
+			if form.is_valid():
+				# save new review
+				review = Review.objects.create(customer=request.user.customer, product=product, rating=form.cleaned_data['rating'], comment=form.cleaned_data['comment'])
+				review.save()
+
+				messages.success(request, 'Thank you for your review!')
+				return redirect('product', product_id=product_id)
+			else:
+				form.errors
+				return render(request, 'store/product.html', context)
+
 
 def wishlist(request):
 	# metadata

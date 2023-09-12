@@ -12,27 +12,39 @@ def signUp(request):
 		return redirect('my-account')
 	
 	if request.method == 'GET':
+		# form
 		form = SignUpForm()
 
 		# cart
 		data = cartData(request)
 		cart_items = data['cart_items']
 
-		return render(request, 'accounts/sign-up.html', {'form': form, 'cart_items': cart_items})
+		context = {
+			'form': form, 
+			'cart_items': cart_items
+		}
+
+		return render(request, 'accounts/sign-up.html', context)
 	
 	if request.method == 'POST':
+		# form
 		form = SignUpForm(request.POST)
 
 		# cart
 		data = cartData(request)
 		cart_items = data['cart_items']
 
+		context = {
+			'form': form, 
+			'cart_items': cart_items
+		}
+
 		if form.is_valid():
-			#save new user
+			# save new user
 			user = User.objects.create_user(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 			user.save()
 			
-			#save user as customer
+			# save user as customer
 			customer = Customer.objects.create(user=user, first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], username=form.cleaned_data['username'])
 			customer.save()
 
@@ -40,7 +52,7 @@ def signUp(request):
 			return redirect('sign-in')
 		else:
 			form.errors
-			return render(request, 'accounts/sign-up.html', {'form': form, 'cart_items': cart_items})
+			return render(request, 'accounts/sign-up.html', context)
 
 def signIn(request):
 	# redirect signed-in users
@@ -48,20 +60,32 @@ def signIn(request):
 		return redirect('my-account')
 	
 	if request.method == 'GET':
+		# form
 		form = SignInForm()
 
 		# cart
 		data = cartData(request)
 		cart_items = data['cart_items']
 
-		return render(request, 'accounts/sign-in.html', {'form': form, 'cart_items': cart_items})
+		context = {
+			'form': form, 
+			'cart_items': cart_items
+		}
+
+		return render(request, 'accounts/sign-in.html', context)
 	
 	if request.method == 'POST':
+		# form
 		form = SignInForm(request.POST)
 
 		# cart
 		data = cartData(request)
 		cart_items = data['cart_items']
+
+		context = {
+			'form': form, 
+			'cart_items': cart_items
+		}
 
 		if form.is_valid():
 			user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
@@ -73,7 +97,7 @@ def signIn(request):
 				return redirect('my-account')
 		else:
 			form.errors
-			return render(request, 'accounts/sign-in.html', {'form': form, 'cart_items': cart_items})
+			return render(request, 'accounts/sign-in.html', context)
 
 def myAccount(request):
 	if not request.user.is_authenticated:
@@ -86,10 +110,14 @@ def myAccount(request):
 		data = cartData(request)
 		cart_items = data['cart_items']
 
-		#orders
+		# orders
 		orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
+
+		context = {
+			'form': form, 'cart_items': cart_items, 'orders': orders
+		}
 		
-		return render(request, 'accounts/my-account.html', {'form': form, 'cart_items': cart_items, 'orders': orders})
+		return render(request, 'accounts/my-account.html', context)
 	
 	if request.method == 'POST':
 		form = ChangePasswordForm(request.POST)
@@ -98,11 +126,15 @@ def myAccount(request):
 		data = cartData(request)
 		cart_items = data['cart_items']
 
-		#orders
+		# orders
 		orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
 
+		context = {
+			'form': form, 'cart_items': cart_items, 'orders': orders
+		}
+
 		if form.is_valid():
-			#update user
+			# update user
 			password = make_password(form.cleaned_data['password'], hasher='default')
 			User.objects.filter(username=request.user.username).update(password=password)
 
@@ -110,7 +142,7 @@ def myAccount(request):
 			return redirect('my-account')
 		else:
 			form.errors
-			return render(request, 'accounts/my-account.html', {'form': form, 'cart_items': cart_items, 'orders': orders})
+			return render(request, 'accounts/my-account.html', context)
 
 def signOut(request):
     if request.method == 'POST':
