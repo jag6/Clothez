@@ -91,7 +91,7 @@ def product(request, product_id):
 		product = get_object_or_404(Product, pk=product_id)
 
 		# reviews
-		reviews = Review.objects.filter(product=product)
+		reviews = Review.objects.filter(product=product).order_by('-created_at')
 
 
 		if request.user.is_authenticated:

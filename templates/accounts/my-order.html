@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="my-order-container">
+       <div>
+            <button aria-label="Back Button" id="back-btn" class="opacity-8 primary margin-bottom-2"><span class="margin-right-1"><i class="fa-solid fa-arrow-left"></i></span>Back</button>
+       </div>
+        <section class="my-order-header">
+            <section><h1>Order {{order.id}}</h1></section>
+            <section><h2>{{order.date_ordered}}</h2></section>
+        </section>
+        <section><h2>Order Items</h2></section>
+        <div class="order-items">
+            {% for item in order.my_order_items %}
+                <ul class="order-item-details">
+                    <li>{{item.product}}</li>
+                    <li>{{item.product.price}}</li>
+                    <li>{{item.quantity}}</li>
+                </ul>
+            {% endfor %}
+        </div>
+        <div class="b margin-top-2">
+            <p>Total: ${{order.get_cart_total}}</p>
+        </div>
+        <div class="b">
+            <p>Order Shipped: <span class="{% if order.is_shipped == True %}success-text{% else %}error-text{% endif %}">{{order.is_shipped}}</span></p>
+        </div>
+    </section>
+{% endblock %}

@@ -18,7 +18,7 @@
         <section><h1>My Account</h1></section>
         <form action="{% url 'sign-out' %}" method="post">
             {% csrf_token %}
-            <button aria-label="Sign-Out Button" class="opacity-8" type="submit"><i class="fa fa-sign-in margin-right-1"></i>Sign-Out</button>
+            <button aria-label="Sign-Out Button" class="opacity-8" type="submit"><span class="margin-right-1"><i class="fa fa-sign-in"></i></span>Sign-Out</button>
         </form>
     </section>
     <section class="my-account-container">
@@ -33,12 +33,7 @@
                     {% for order in orders %}
                         <li>
                             <div><p>{{order.date_ordered}}</p></div>
-                            <div><p>Here</p></div>
-                            <ul>
-                                {% for item in order.my_order_items %}
-                                    <li>{{item.product}}</li>
-                                {% endfor %}
-                            </ul>
+                            <a href="{% url 'my-order' order.id %}" target="_blank" class="click-to-see-my-order-btn my-order-btn">Here</a>
                         </li>
                     {% endfor %}
                 </ul>

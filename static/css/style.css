@@ -614,9 +614,51 @@ label { margin-bottom: .5rem; }
 .my-account-user-orders .line div p { font-size: 20px; line-height: 40px; }
 .my-account-user-orders ul li { 
 	display: flex; flex-direction: row;
-	margin: 0 auto; justify-content: space-between;
+	margin: 0 auto .5rem auto; justify-content: space-between;
 	padding: 0 1%;
 }
+.my-order-btn { 
+	position: relative;
+	font-size: 16px; line-height: 24px;
+	border-bottom: solid transparent 2px; 
+}
+.my-order-btn:hover { 
+	cursor: pointer; 
+	border-bottom: solid #222 2px; 
+	transition: .2s ease-in-out;
+}
+.my-account-user-info { align-self: flex-start; }
+
+/*MY ORDER*/
+
+.my-order-container { 
+	display: flex; flex-direction: column;
+	max-width: 1200px; 
+	padding: 0 5%; margin: 2rem auto 4rem auto; 
+	justify-content: center; 
+}
+.my-order-header { 
+	display: flex; flex-flow: row wrap; 
+	justify-content: space-between; align-items: baseline;
+	border-bottom: 2px solid #222;
+	margin-bottom: 1rem;
+}
+.my-order-container h1 { font-size: 48px; line-height: 72px; }
+.my-order-container h2 { font-size: 24px; line-height: 48px; }
+.order-item-details { 
+	display: flex; flex-direction: row; 
+	margin: 0 auto;
+	justify-content: space-between; align-items: baseline;
+}
+.order-item-details li { 
+	font-size: 16px; line-height: 24px; 
+	width: calc(100% / 3); 
+}
+.order-item-details li:nth-child(2), .order-item-details li:nth-child(3) { text-align: center; }
+.order-item-details:nth-child(odd) { background-color: #ccc; }
+.order-item-details:nth-child(even) { background-color: none; margin-top: .5rem;}
+.order-total { margin-top: 2rem;}
+.my-order-container p { font-size: 18px; line-height: 32px; }
 
 @media only screen and (max-width: 600px) {
 	.my-account-container { flex-direction: column; padding: 0 5%; }

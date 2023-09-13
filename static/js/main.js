@@ -176,3 +176,11 @@ if(document.querySelector('#open-popup')) {
         openPU.style.display = 'flex';
     });
 }
+
+
+// BACK BTN
+if(document.getElementById('back-btn')) {
+    document.getElementById('back-btn').addEventListener('click', () => {
+        close();
+    });
+};

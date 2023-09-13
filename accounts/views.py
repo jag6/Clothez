@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
@@ -114,7 +114,9 @@ def myAccount(request):
 		orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
 
 		context = {
-			'form': form, 'cart_items': cart_items, 'orders': orders
+			'form': form, 
+			'cart_items': cart_items, 
+			'orders': orders
 		}
 		
 		return render(request, 'accounts/my-account.html', context)
@@ -143,6 +145,34 @@ def myAccount(request):
 		else:
 			form.errors
 			return render(request, 'accounts/my-account.html', context)
+		
+def myOrder(request, order_id):
+	# order info
+	order = get_object_or_404(Order, pk=order_id)
+
+	if not request.user.is_authenticated:
+		return redirect('sign-in')
+	if request.user != order.customer.user:
+		return redirect('my-account')
+	
+	# metadata
+	title = 'Order' + ' ' + str(order_id)
+	description = 'View your order details.'
+	url = '/my-account/order'
+
+	# cart
+	data = cartData(request)
+	cart_items = data['cart_items']
+
+	context = {
+		'order': order,
+		'title': title,
+		'description': description,
+		'url': url,
+		'cart_items': cart_items
+	}
+
+	return render(request, 'accounts/my-order.html', context)
 
 def signOut(request):
     if request.method == 'POST':
