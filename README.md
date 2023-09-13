@@ -15,10 +15,11 @@ This is an eCommerce template that allows for both signed-in and guest add to ca
     - view orders
   - Product Reviews
     - only if signed-in and have purchase history
+    - limit to 1 per customer
+    - leave rating and comment
+    - show average rating
 
 ### Currently Implementing
-  - Product Reviews
-    - leave rating and comment
   - Orders
     - send email upon transaction completion
     - send email when order ships
