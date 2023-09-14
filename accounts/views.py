@@ -150,8 +150,6 @@ def myOrder(request, order_id):
 	# order info
 	order = get_object_or_404(Order, pk=order_id)
 
-	if not request.user.is_authenticated:
-		return redirect('sign-in')
 	if request.user != order.customer.user:
 		return redirect('my-account')
 	

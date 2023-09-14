@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages
+from django.core.mail import send_mail
+from eCommerce.settings import EMAIL_HOST_USER
 # from django.contrib.postgres.search import SearchQuery
 import json
 import datetime
@@ -313,5 +315,36 @@ def processOrder(request):
 
 		order.transaction_id = transaction_id
 		order.save()
+
+		# send email to customer
+		if request.user.is_authenticated:
+			customer_email = request.user.customer.email
+			customer_url = 'https://clothezrfw.online/my-account'
+			send_mail(
+				'New Order - Clothez',
+				'Thank you for your order. Your item will be shipping shortly. Please check out your order details at your store account page. ' + customer_url,
+				EMAIL_HOST_USER,
+				[customer_email],
+				fail_silently=False
+			)
+		else:
+			customer_email =  data['form']['email']
+			send_mail(
+				'New Order - Clothez',
+				'Thank you for your order. Your item will be shipping shortly.',
+				EMAIL_HOST_USER,
+				[customer_email],
+				fail_silently=False
+			)
+
+		# send email to store owner
+		owner_url = 'https://clothezrfw.online/admin/store/order/'
+		send_mail(
+			'New Order - Clothez',
+			'Go to your admin panel ' + owner_url + ' and ship when ready.',
+			EMAIL_HOST_USER,
+			[EMAIL_HOST_USER],
+			fail_silently=False
+		)
 
 		return JsonResponse('Payment submitted..', safe=False)
