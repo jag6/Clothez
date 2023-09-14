@@ -18,8 +18,9 @@ This is an eCommerce template that allows for both signed-in and guest add to ca
     - limit to 1 per customer
     - leave rating and comment
     - show average rating
+  - Orders
+    - send email upon transaction completion
 
 ### Currently Implementing
   - Orders
-    - send email upon transaction completion
     - send email when order ships
