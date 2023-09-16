@@ -10,6 +10,8 @@ This is an eCommerce template that allows for both signed-in and guest add to ca
   - Wishlist
     - move item from wishlist to cart
   - Search
+    - single input in nav bar
+    - multi-input on search page
   - Customer Account Page
     - change password
     - view orders
@@ -20,7 +22,8 @@ This is an eCommerce template that allows for both signed-in and guest add to ca
     - show average rating
   - Orders
     - send email upon transaction completion
+    - send email when order ships
 
 ### Currently Implementing
-  - Orders
-    - send email when order ships
+  - Customer
+    - reset password
