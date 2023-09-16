@@ -14,7 +14,7 @@
             {% for item in order.my_order_items %}
                 <ul class="order-item-details">
                     <li>{{item.product}}</li>
-                    <li>{{item.product.price}}</li>
+                    <li>{{item.product.price|floatformat:2}}</li>
                     <li>{{item.quantity}}</li>
                 </ul>
             {% endfor %}

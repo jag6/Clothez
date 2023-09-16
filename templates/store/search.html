@@ -2,41 +2,68 @@
 
 {% block content %}
     <section class="page-header"><h1>SEARCH</h1></section>
-    <div class="categories">
-        <ul>
-            {% for category in search_options %}
-                <li>{{category.category}}</li>
-            {% endfor %}
-        </ul>     
-        <ul>
-            {% for type in search_options %}
-                <li>{{type.type}}</li>
-            {% endfor %}
-        </ul>      
-        <ul>
-            {% for gender in search_options %}
-                <li>{{gender.type}}</li>
-            {% endfor %}
-        </ul>      
-    </div>
+    <section class="search-form-container box-shadow">
+        <form action="{% url 'search' %}" class="margin-bottom-2 form">
+            <div class="form-field">
+                <label for="keyword">KEYWORD</label>
+                <input type="text" name="keyword" id="keyword" placeholder="Keyword (blue jeans, t-shirt, etc...)" value="{{values.keyword}}">
+            </div>
+            <div class="form-field form-group">
+                <div class="search-split">
+                    <label for="category">CATEGORY</label>
+                    <select name="category" id="category">
+                        <option disabled selected>Category</option>
+                        {% for key, value in category_options.items %}
+                            <option value="{{key}}"
+                                {% if key == values.category %}
+                                    selected
+                                {% endif %}>
+                                {{value}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="gender">GENDER</label>
+                    <select name="gender" id="gender">
+                        <option disabled selected>Gender</option>
+                        {% for key, value in gender_options.items %}
+                            <option value="{{key}}"
+                                {% if key == values.gender %}
+                                    selected
+                                {% endif %}>
+                                {{value}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-field">
+                <label for="price">PRICE RANGE</label>
+                <select name="price" id="price">
+                    <option disabled selected>Max Price</option>
+                    {% for key, value in price_options.items %}
+                        <option value="{{key}}"
+                            {% if key == values.price %}
+                                selected
+                            {% endif %}>
+                            {{value}}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button aria-label="Submit Search Button" type="submit" class="primary opacity-8">SUBMIT</button>
+        </form>
+    </section>
     <section class="products-container search-container">
-        <ul class="products">
-            {% for product in products %}
-                <li>
-                    <a href="{% url 'product' product.id %}" target="_blank" class="product box-shadow">                        
-                        <div class="product-img">
-                            <img src="{{product.image.url}}" alt="{{product.name}}">
-                        </div> 
-                        <section class="product-name">
-                            <h4>{{product.name}}</h4> 
-                        </section>
-                        {% include 'components/product-rating.html' %}
-                        <div class="product-price">
-                            <p>${{product.price|floatformat:2}}</p>
-                        </div>
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
+        {% if products %}
+            <ul class="products">
+                {% for product in products %}
+                    {% include 'components/products-li.html' %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="no-search-results"><p>Sorry, we couldn't find anything that matched your query.<br> Please alter your query and try again.</p></div>
+        {% endif %}
     </section>
 {% endblock %}

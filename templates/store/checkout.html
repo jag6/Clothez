@@ -4,7 +4,7 @@
     <section class="checkout-header page-header"><h1>- CHECKOUT -</h1></section>
     <section class="checkout-container">
         <section class="checkout-user-info box-shadow">
-            <form id="form" class="form">
+            <form id="checkout-form" class="form">
                 {% if not user.is_authenticated %}
                     <section id="user-info">
                         <section><h2>Customer Information:</h2></section>
@@ -36,7 +36,7 @@
                         </div>
                     </section>
                 {% endif %}
-                <button aria-label="Continue Checkout Button" required id="form-button" class="btn btn-success btn-block" type="submit">CONTINUE</button>
+                <button aria-label="Continue Checkout Button" required id="continue-checkout-btn" class="btn btn-success btn-block" type="submit">CONTINUE</button>
             </form>
             <section id="payment-info" class="hidden pay-pal-container">
                 <section><h2>Paypal Options</h2></section>
@@ -87,23 +87,22 @@
     <script type="text/javascript">
         const shipping = '{{order.shipping}}';
 
-        const form = document.getElementById('form');
-        form.addEventListener('submit', (e) => {
+        const checkoutForm = document.getElementById('checkout-form');
+        checkoutForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            if(document.getElementById('proceed-info')) {
-                document.getElementById('proceed-info').classList.add('hidden');
-            }
-            document.getElementById('form-button').classList.add('hidden');
+            document.getElementById('continue-checkout-btn').classList.add('hidden');
             document.getElementById('payment-info').classList.remove('hidden');
         });
 
         const submitFormData = () => {
-            let userFormData = {
+            let customerInfo = {
                 'first_name': null,
                 'last_name': null,
-                'email': null,
-                'total': total,
+                'email': null
             };
+            let orderInfo = {
+                'total': total
+            }
             let shippingInfo = {
                 'address': null,
                 'city': null,
@@ -111,16 +110,18 @@
                 'zipcode': null,
             };
 
-            if(shipping != 'False') {
-                shippingInfo.address = form.address.value;
-                shippingInfo.city = form.city.value;
-                shippingInfo.state = form.state.value;
-                shippingInfo.zipcode = form.zipcode.value;
-            }
+            const checkOutForm = document.getElementById('checkout-form');
+
             if(user === 'AnonymousUser') {
-                userFormData.first_name = form.first_name.value;
-                userFormData.last_name = form.last_name.value;
-                userFormData.email = form.email.value;
+                customerInfo.first_name = checkOutForm.first_name.value;
+                customerInfo.last_name = checkOutForm.last_name.value;
+                customerInfo.email = checkOutForm.email.value;
+            }
+            if(shipping === 'True') {
+                shippingInfo.address = checkOutForm.address.value;
+                shippingInfo.city = checkOutForm.city.value;
+                shippingInfo.state = checkOutForm.state.value;
+                shippingInfo.zipcode = checkOutForm.zipcode.value;
             }
             
             const makePayment = async () => {
@@ -132,7 +133,7 @@
                             'Content-Type': 'application/json',
                             'X-CSRFToken': csrftoken,
                         }, 
-                        body: JSON.stringify({'form': userFormData, 'shipping': shippingInfo})
+                        body: JSON.stringify({'customer': customerInfo, 'order': orderInfo, 'shipping': shippingInfo})
                         })
                         if(!response.ok) {
                             alert('Sorry, there\'s been an error. Please try again.');

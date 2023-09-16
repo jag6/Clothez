@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.core.mail import send_mass_mail
 from eCommerce.settings import EMAIL_HOST_USER
-# from django.contrib.postgres.search import SearchQuery
 import json
 import datetime
 from . models import *
 from . forms import * 
-from . options import price_options
+from . options import *
 from . utils import *
 
 def index(request):
@@ -52,29 +51,49 @@ def search(request):
 	cart_items = data['cart_items']
 
 	#search info
-	# search_options = Product.objects.distinct('category', 'type', 'gender')
 	queryset_list = Product.objects.order_by('category', 'name').filter(is_published=True)
 
 	if 'q' in request.GET:
 		q = request.GET['q']
 		if q:
-			queryset_list = queryset_list.filter(name__icontains = q ) | \
-							queryset_list.filter(gender__istartswith = q)
-			# description__icontains = q, category__icontains = q, type__icontains = q, gender__icontains = q, 
+			queryset_list = queryset_list.filter(gender__iexact = q) | \
+							queryset_list.filter(name__icontains = q ) | \
+							queryset_list.filter(category__icontains = q) | \
+							queryset_list.filter(type__icontains = q)
 	
-	# if 'price' in request.GET:
-	# 	price = price.GET['price']
-	# 	if price:
-	# 		queryset_list = queryset_list.filter(price__lte = price)
+	# keyword
+	if 'keyword' in request.GET:
+		keyword = request.GET['keyword']
+		if keyword:
+			queryset_list = queryset_list.filter(name__icontains = keyword)
+
+	# category
+	if 'category' in request.GET:
+		category = request.GET['category']
+		if category:
+			queryset_list = queryset_list.filter(category__icontains = category)
+
+	# gender
+	if 'gender' in request.GET:
+		gender = request.GET['gender']
+		if gender:
+			queryset_list = queryset_list.filter(gender__iexact = gender)
+	
+	# price
+	if 'price' in request.GET:
+		price = request.GET['price']
+		if price:
+			queryset_list = queryset_list.filter(price__lte = price)
 
 	context = {
 		'title': title,
 		'description': description,
 		'url': url,
 		'cart_items': cart_items,
-		# 'search_options': search_options,
 		'products': queryset_list,
 		'values': request.GET,
+		'category_options': category_options,
+		'gender_options': gender_options,
 		'price_options': price_options
 	}
 
@@ -98,8 +117,7 @@ def product(request, product_id):
 
 		if request.user.is_authenticated:
 			# check for product as order item in customer order
-			orders = Order.objects.filter(customer=request.user.customer).first()
-			order_item = OrderItem.objects.filter(order=orders, product=product).first()
+			order_item = OrderItem.objects.filter(order__customer=request.user.customer, product=product).first()
 
 			# check if user already submitted review
 			left_review = Review.objects.filter(customer=request.user.customer, product=product).first()
@@ -143,8 +161,7 @@ def product(request, product_id):
 
 		if request.user.is_authenticated:
 			# check for product as order item in customer order
-			orders = Order.objects.filter(customer=request.user.customer).first()
-			order_item = OrderItem.objects.filter(order=orders, product=product).first()
+			order_item = OrderItem.objects.filter(order__customer=request.user.customer, product=product).first()
 
 			# check if user already submitted review
 			left_review = Review.objects.filter(customer=request.user.customer, product=product).first()
@@ -163,7 +180,7 @@ def product(request, product_id):
 			}
 
 			# product info
-			product = get_object_or_404(Product, pk = product_id)
+			product = get_object_or_404(Product, pk=product_id)
 
 			if form.is_valid():
 				# save new review
@@ -279,9 +296,9 @@ def processOrder(request):
 					quantity=(item['quantity'] if item['quantity'] > 0 else -1*item['quantity'])
 				)
 		else:
-			first_name = data['form']['first_name']
-			last_name = data['form']['last_name']
-			email = data['form']['email']
+			first_name = data['customer']['first_name']
+			last_name = data['customer']['last_name']
+			email = data['customer']['email']
 
 			cookie_data = cookieCart(request)
 			items = cookie_data['items']
@@ -299,7 +316,7 @@ def processOrder(request):
 					quantity=(item['quantity'] if item['quantity'] > 0 else -1*item['quantity'])
 				)
 
-		total = float(data['form']['total'])
+		total = float(data['order']['total'])
 		if total == order.get_cart_total:
 			order.complete = True
 
@@ -316,35 +333,32 @@ def processOrder(request):
 		order.transaction_id = transaction_id
 		order.save()
 
-		# send email to customer
-		if request.user.is_authenticated:
-			customer_email = request.user.customer.email
-			customer_url = 'https://clothezrfw.online/my-account'
-			send_mail(
-				'New Order - Clothez',
-				'Thank you for your order. Your item will be shipping shortly. Please check out your order details at your store account page. ' + customer_url,
-				EMAIL_HOST_USER,
-				[customer_email],
-				fail_silently=False
-			)
-		else:
-			customer_email =  data['form']['email']
-			send_mail(
-				'New Order - Clothez',
-				'Thank you for your order. Your item will be shipping shortly.',
-				EMAIL_HOST_USER,
-				[customer_email],
-				fail_silently=False
-			)
-
-		# send email to store owner
+		# send email to customer and store owner
 		owner_url = 'https://clothezrfw.online/admin/store/order/'
-		send_mail(
+		owner_message = (
 			'New Order - Clothez',
 			'Go to your admin panel ' + owner_url + ' and ship when ready.',
 			EMAIL_HOST_USER,
 			[EMAIL_HOST_USER],
-			fail_silently=False
 		)
+		if request.user.is_authenticated:
+			customer_email = request.user.customer.email
+			customer_url = 'https://clothezrfw.online/my-account'
+			customer_message = (
+				'New Order - Clothez',
+				'Thank you for your order. Your item will be shipping shortly. Please check out your order details at your store account page. ' + customer_url,
+				EMAIL_HOST_USER,
+				[customer_email],
+			)
+			send_mass_mail((customer_message, owner_message), fail_silently=False)
+		else:
+			customer_email =  data['form']['email']
+			guest_message = (
+				'New Order - Clothez',
+				'Thank you for your order. Your item will be shipping shortly.',
+				EMAIL_HOST_USER,
+				[customer_email],
+			)
+			send_mass_mail((guest_message, owner_message), fail_silently=False)
 
 		return JsonResponse('Payment submitted..', safe=False)

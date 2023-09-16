@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.db.models import Avg
+from django.contrib import admin
+from django.contrib.auth.models import User
 
 class Customer(models.Model):
 	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)

@@ -19,9 +19,17 @@ def signUp(request):
 		data = cartData(request)
 		cart_items = data['cart_items']
 
+		# metadata
+		title = 'Create a New Account'
+		description = 'Sign up and save today!'
+		url = '/sign-up'
+
 		context = {
 			'form': form, 
-			'cart_items': cart_items
+			'cart_items': cart_items, 
+			'title': title,
+			'description': description,
+			'url': url
 		}
 
 		return render(request, 'accounts/sign-up.html', context)
@@ -34,9 +42,17 @@ def signUp(request):
 		data = cartData(request)
 		cart_items = data['cart_items']
 
+		# metadata
+		title = 'Create a New Account'
+		description = 'Sign up and save today!'
+		url = '/sign-up'
+
 		context = {
 			'form': form, 
-			'cart_items': cart_items
+			'cart_items': cart_items, 
+			'title': title,
+			'description': description,
+			'url': url
 		}
 
 		if form.is_valid():
@@ -67,9 +83,17 @@ def signIn(request):
 		data = cartData(request)
 		cart_items = data['cart_items']
 
+		# metadata
+		title = 'Welcome Back'
+		description = 'Sign in and do what you came to do.'
+		url = '/sign-in'
+
 		context = {
 			'form': form, 
-			'cart_items': cart_items
+			'cart_items': cart_items, 
+			'title': title,
+			'description': description,
+			'url': url
 		}
 
 		return render(request, 'accounts/sign-in.html', context)
@@ -82,9 +106,17 @@ def signIn(request):
 		data = cartData(request)
 		cart_items = data['cart_items']
 
+		# metadata
+		title = 'Welcome Back'
+		description = 'Sign in and do what you came to do.'
+		url = '/sign-in'
+
 		context = {
 			'form': form, 
-			'cart_items': cart_items
+			'cart_items': cart_items, 
+			'title': title,
+			'description': description,
+			'url': url
 		}
 
 		if form.is_valid():
@@ -104,6 +136,7 @@ def myAccount(request):
 		return redirect('sign-in')
 	
 	if request.method == 'GET':
+		# form
 		form = ChangePasswordForm()
 
 		# cart
@@ -113,15 +146,24 @@ def myAccount(request):
 		# orders
 		orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
 
+		# metadata
+		title = 'My Account'
+		description = 'View previous orders or change account information.'
+		url = '/my-account'
+
 		context = {
 			'form': form, 
 			'cart_items': cart_items, 
-			'orders': orders
+			'orders': orders,
+			'title': title,
+			'description': description,
+			'url': url
 		}
 		
 		return render(request, 'accounts/my-account.html', context)
 	
 	if request.method == 'POST':
+		# form
 		form = ChangePasswordForm(request.POST)
 
 		# cart
@@ -131,8 +173,18 @@ def myAccount(request):
 		# orders
 		orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
 
+		# metadata
+		title = 'My Account'
+		description = 'View previous orders or change account information.'
+		url = '/my-account'
+
 		context = {
-			'form': form, 'cart_items': cart_items, 'orders': orders
+			'form': form, 
+			'cart_items': cart_items, 
+			'orders': orders,
+			'title': title,
+			'description': description,
+			'url': url
 		}
 
 		if form.is_valid():

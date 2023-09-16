@@ -54,9 +54,6 @@
                 </div>
             </a>
             <div class="search">
-                <button type="button" aria-label="Sidebar Open Button" class="sidebar-open-btn">
-                    <i class="fa-solid fa-bars-staggered"></i>
-                </button>
                 <form action="{% url 'search' %}" method="get" class="search-form">
                     <input type="text" name="q" placeholder="Search...">
                 <button type="submit" aria-label="Search Button"><i class="fa fa-search"></i></button>
@@ -95,9 +92,6 @@
             </div>
         </nav>
         <div class="search-m">
-            <button type="submit" aria-label="Sidebar Open Button" id="sidebar-open-btn" class="sidebar-open-btn">
-                <i class="fa-solid fa-bars-staggered"></i>
-            </button>
             <form action="{% url 'search' %}" method="get" class="search-form">
                 <input type="text" name="q" placeholder="Search...">
                 <button type="submit" aria-label="Search Button"><i class="fa fa-search"></i></button>

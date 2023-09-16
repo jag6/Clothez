@@ -1,18 +1,5 @@
 {% extends 'base.html' %}
 
-{% block canonical %}/sign-in{% endblock %}
-
-{% block description %}Sign in and do what you came to do.{% endblock %}
-
-{% block twitter_title %}Welcome Back{% endblock %}
-{% block twitter_description %}Sign in and do what you came to do.{% endblock %}
-
-{% block meta_title %}Welcome Back{% endblock %}
-{% block meta_description %}Sign in and do what you came to do.{% endblock %}
-{% block meta_url %}/sign-in{% endblock %}
-
-{% block title %}Welcome Back - Clothez{% endblock %}
-
 {% block content %}
     <section class="form-container box-shadow">
         <section>
@@ -23,7 +10,7 @@
             {% csrf_token %}
             <div class="form-field">
                 <label for="username">Username</label>
-                <input required type="username" name="username" id="username" value="{{form.username.value | default_if_none:''}}">
+                <input required type="text" name="username" id="username" value="{{form.username.value | default_if_none:''}}">
             </div>
             <div class="form-field">
                 <label for="password">Password</label>
