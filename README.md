@@ -23,6 +23,9 @@ This is an eCommerce template that allows for both signed-in and guest add to ca
       - page content (about, contact, privacy-policy)
     - send email to customer when order ships
       - choose between a stock email with pre-written message or compose a new email from scratch
+  - Email Confirmation
+    - confirm sign-up
+    - reset password
   - Customer Account Page
     - change password
     - view orders
@@ -33,8 +36,3 @@ This is an eCommerce template that allows for both signed-in and guest add to ca
     - show average rating
   - Orders
     - send email to both customer and admin upon transaction completion
-
-### Currently Implementing
-  - Customer
-    - confirm sign-up email
-    - reset password
