@@ -96,25 +96,23 @@ def search(request):
 		'gender_options': gender_options,
 		'price_options': price_options
 	}
-
 	return render(request, 'store/search.html', context)
 
 def product(request, product_id):
+	# metadata
+	css = 'product'
+
+	# cart
+	data = cartData(request)
+	cart_items = data['cart_items']
+
+	# product info
+	product = get_object_or_404(Product, pk=product_id)
+
+	# reviews
+	reviews = Review.objects.filter(product=product).order_by('-created_at')
+
 	if request.method == 'GET':
-		# metadata
-		css = 'product'
-
-		# cart
-		data = cartData(request)
-		cart_items = data['cart_items']
-
-		# product info
-		product = get_object_or_404(Product, pk=product_id)
-
-		# reviews
-		reviews = Review.objects.filter(product=product).order_by('-created_at')
-
-
 		if request.user.is_authenticated:
 			# check for product as order item in customer order
 			order_item = OrderItem.objects.filter(order__customer=request.user.customer, product=product).first()
@@ -122,7 +120,6 @@ def product(request, product_id):
 			# check if user already submitted review
 			left_review = Review.objects.filter(customer=request.user.customer, product=product).first()
 
-			# form
 			form = ReviewForm()
 
 			context = {
@@ -134,7 +131,6 @@ def product(request, product_id):
 				'left_review': left_review, 
 				'reviews': reviews
 			}
-
 			return render(request, 'store/product.html', context)
 		else:
 			context = {
@@ -146,19 +142,6 @@ def product(request, product_id):
 			return render(request, 'store/product.html', context)
 	
 	if request.method == 'POST':
-		# metadata
-		css = 'product'
-
-		# cart
-		data = cartData(request)
-		cart_items = data['cart_items']
-
-		# product info
-		product = get_object_or_404(Product, pk=product_id)
-
-		# reviews
-		reviews = Review.objects.filter(product=product).order_by('-created_at')
-
 		if request.user.is_authenticated:
 			# check for product as order item in customer order
 			order_item = OrderItem.objects.filter(order__customer=request.user.customer, product=product).first()
@@ -166,7 +149,6 @@ def product(request, product_id):
 			# check if user already submitted review
 			left_review = Review.objects.filter(customer=request.user.customer, product=product).first()
 
-			# form
 			form = ReviewForm(request.POST)
 
 			context = {
@@ -179,9 +161,6 @@ def product(request, product_id):
 				'reviews': reviews
 			}
 
-			# product info
-			product = get_object_or_404(Product, pk=product_id)
-
 			if form.is_valid():
 				# save new review
 				review = Review.objects.create(customer=request.user.customer, product=product, rating=form.cleaned_data['rating'], comment=form.cleaned_data['comment'])
@@ -192,7 +171,6 @@ def product(request, product_id):
 			else:
 				form.errors
 				return render(request, 'store/product.html', context)
-
 
 def wishlist(request):
 	# metadata
@@ -221,7 +199,6 @@ def wishlist(request):
 		'order': order,
 		'items': items
 	}
-
 	return render(request, 'store/wishlist.html', context)
 
 def cart(request):
@@ -255,7 +232,7 @@ def checkout(request):
 	url = '/checkout'
 	css = 'cart'
 
-	#cart
+	# cart
 	data = cartData(request)
 	if not data['cart_items']:
 		return redirect('/')
@@ -264,17 +241,39 @@ def checkout(request):
 	order = data['order']
 	items = data['items']
 
-	context = {
-		'title': title,
-		'description': description,
-		'url': url,
-		'css': css,
-		'cart_items': cart_items,
-		'order': order, 
-		'items': items
-	}
+	# pre-fill shipping address
+	if(request.user.is_authenticated and ShippingAddress.objects.filter(customer=request.user.customer).first()):
+		shipping = ShippingAddress.objects.filter(customer=request.user.customer).first()
+		address = shipping.address
+		city = shipping.city
+		state = shipping.state
+		zipcode = shipping.zipcode
+
+		context = {
+			'title': title,
+			'description': description,
+			'url': url,
+			'css': css,
+			'cart_items': cart_items,
+			'order': order, 
+			'items': items,
+			'address': address,
+			'city': city,
+			'state': state,
+			'zipcode': zipcode
+		}
+	else:
+		context = {
+			'title': title,
+			'description': description,
+			'url': url,
+			'css': css,
+			'cart_items': cart_items,
+			'order': order, 
+			'items': items
+		}
 	return render(request, 'store/checkout.html', context)
-		
+
 
 def processOrder(request):
 	if request.method == 'POST':
