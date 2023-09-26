@@ -36,7 +36,7 @@ class SignUpForm(forms.ModelForm):
         email = self.cleaned_data.get('email')
         if not email:
             self.add_error('email', 'Please fill in email')
-        elif User.objects.filter(email = email).exists():
+        elif User.objects.filter(email=email).exists():
             self.add_error('email', 'Email already in use')
 
         username = self.cleaned_data.get('username')
@@ -74,3 +74,6 @@ class ChangePasswordForm(forms.ModelForm):
             self.add_error('password', 'Password must be at least 8 characters long')
 
         return self.cleaned_data
+
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField(max_length=30, label='email')

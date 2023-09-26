@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% include 'components/alert-messages.html' %}
     <section class="banner">
         <div>
             <img src="{{banner.image.url}}" alt="{{banner.image_description}}">

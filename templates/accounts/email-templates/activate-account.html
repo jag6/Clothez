@@ -1,0 +1,6 @@
+{% autoescape off %}
+Hi {{user.username}},
+Please click on the link below to complete the sign-up process. After clicking on the link please sign-in. Link will expire after 4 hours.
+
+{{protocol}}://{{domain}}{% url 'activate-account' uidb64=uid token=token %}
+{% endautoescape %}
