@@ -8,10 +8,6 @@ def about(request):
     description = 'Learn about us and our business.'
     url= '/about'
 
-    # cart
-    data = cartData(request)
-    cart_items = data['cart_items']
-
     # content
     content = PageContent.objects.get(name = 'About')
 
@@ -19,7 +15,6 @@ def about(request):
         'title': title,
         'description': description,
         'url': url,
-        'cart_items': cart_items,
         'content': content
     }
 
@@ -31,10 +26,6 @@ def contact(request):
     description = 'Drop us a line.'
     url= '/contact'
 
-    # cart
-    data = cartData(request)
-    cart_items = data['cart_items']
-
     # content
     content = PageContent.objects.get(name = 'Contact')
 
@@ -42,7 +33,6 @@ def contact(request):
         'title': title,
         'description': description,
         'url': url,
-        'cart_items': cart_items,
         'content': content
     }
 
@@ -54,10 +44,6 @@ def privacyPolicy(request):
     description = 'Drop us a line.'
     url= '/privacy-policy'
 
-    # cart
-    data = cartData(request)
-    cart_items = data['cart_items']
-
     # content
     content = PageContent.objects.get(name = 'Privacy Policy')
 
@@ -65,7 +51,6 @@ def privacyPolicy(request):
         'title': title,
         'description': description,
         'url': url,
-        'cart_items': cart_items,
         'content': content
     }
 

@@ -23,7 +23,7 @@
                             <div class="item-name"><a href="{% url 'product' item.product.id %}">{{item.product.name}}</a></div>
                             <div>
                                 Qty: <span class="margin-right-half"></span>
-                                <div><p>{{item.quantity}}</p></div>
+                                <div><p class="item-quantity" data-product="{{item.product.id}}"></p></div>
                                 <div class="cart-quantity-btns">
                                     <span data-product="{{item.product.id}}" data-action="add-to-cart" class="update-btn"><i class="fa-solid fa-caret-up"></i></span>
                                     <span data-product="{{item.product.id}}" data-action="remove-from-cart" class="update-btn"><i class="fa-solid fa-caret-down"></i></span>
@@ -39,8 +39,9 @@
         </section>
         {% if order.get_cart_total %}
             <section class="cart-action box-shadow">
-                <section id="cart-subtotal">
-                    <h3>Total: ${{order.get_cart_total|floatformat:2}}</h3>
+                <section>
+                    <h3 id="cart-total"></h3>
+                    <div id="item-totals"></div>
                 </section>
                 <a href="{% url 'checkout' %}" id="checkout-btn" class="primary fw">Proceed to Checkout</a>
                 <a href="{% url 'index' %}" id="continue-shopping-btn" class="primary fw">Continue Shopping</a>

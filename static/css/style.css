@@ -131,7 +131,7 @@ header a, footer a { color: #fff; }
 
 .brand { 
 	display: flex; flex-direction: row; 
-	align-items: center; 
+	align-items: baseline; 
 	margin-right: 3rem;
 }
 .brand span { margin-right: .5rem; }
@@ -151,7 +151,8 @@ header a, footer a { color: #fff; }
 .header-cf i { color: #fff; }
 .header-cf p { margin: 0 0 1.5rem 4px; }
 
-.ul-guest { min-width: 340px; }
+.ul-guest li:nth-child(1), .ul-guest li:nth-child(2) { min-width: 80px; }
+.ul-cart { min-width: 48px; margin-right: 0 !important; }
 .user-links ul { height: 56px; }
 .user-links ul li a:hover { opacity: .5; }
 .ul-mobile { display: none; }

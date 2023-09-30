@@ -29,79 +29,161 @@ const getCookie = (name) => {
     return null;
 }
 
-// CART AND WISHLIST
+// cart cookie
 let cart = JSON.parse(getCookie('cart'));
 const updateCart = () => {
-    const update = document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
-    return update;
+    document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
 }
 if (cart == undefined) {
     cart = {};
     updateCart();
 }
 
-const addToCart = (product_id) => {
-    if(cart[product_id] == undefined) {
-        cart[product_id] = {'quantity': 1}; 
-    }else {
-        cart[product_id]['quantity'] += 1;
-    }
-}
-
+// wishlist cookie
 let wishlist = JSON.parse(getCookie('wishlist'));
 const updateWishlist = () => {
-    const update = document.cookie = 'wishlist=' + JSON.stringify(wishlist) + ';domain=;path=/;secure;http-only;samesite=lax';
-    return update;
+    document.cookie = 'wishlist=' + JSON.stringify(wishlist) + ';domain=;path=/;secure;http-only;samesite=lax';
 }
 if (wishlist == undefined) {
     wishlist = {};
     updateWishlist();   
 }
 
-const updateCartAndWishlist = (product_id, action) => {
-    switch(action) {
-        case 'add-to-cart':
-            addToCart(product_id);
-            updateCart();
-            break;
-        case 'remove-from-cart':
-            cart[product_id]['quantity'] -= 1
-            if(cart[product_id]['quantity'] <= 0) {
-                delete cart[product_id];
+const getCartItemsAndTotal = () => {
+    let cart_total;
+	let order = {'cart_total': 0, 'cart_items': 0}
+    let items = [];
+
+    for(let i in cart) {
+        if(cart[i]['quantity'] > 0) {
+            cart_total = (cart[i]['price'] * cart[i]['quantity']);
+            order['cart_total'] += cart_total;
+            order['cart_items'] += cart[i]['quantity'];
+
+            let item = {
+                'id': cart[i]['id'],
+                'quantity': cart[i]['quantity']
             }
-            updateCart();
-            break;
-        case 'add-to-wishlist':
-            if(wishlist[product_id] == undefined) {
-                wishlist[product_id] = {'quantity': 1};
+            items.push(item);
+
+            let itemQuantity = document.querySelectorAll('.item-quantity');
+            if(itemQuantity) {
+                itemQuantity.forEach((item) => {
+                    item.innerHTML = `
+                        ${items.map((item) => `
+                            <div class="iq-child" data-product=${item.id}>${item.quantity}</div>
+                        `).join('\n')}
+                    `;
+                    const iqChildren = document.querySelectorAll('.iq-child');
+                    iqChildren.forEach((child) => {
+                        if(child.dataset.product != child.parentNode.dataset.product) {
+                            child.remove();
+                        }
+                    });
+                });
             }
-            updateWishlist();
-            break;
-        case 'add-to-cart-from-wishlist':
-            addToCart(product_id);
-            updateCart();
-            delete wishlist[product_id];
-            updateWishlist();
-            break;
-        case 'remove-from-wishlist':
-            delete wishlist[product_id];
-            updateWishlist();
-            break;
+        }
     }
-    window.location.reload();
+
+    // show total $ of cart items
+    let cartTotal = document.getElementById('cart-total')
+    if(cartTotal) {
+        cartTotal.innerText = 'Total: $' + order['cart_total'].toFixed(2);;
+    }
+
+    // show # of cart items
+    let cartItems = document.getElementById('cart-items');
+    cartItems.innerText = order['cart_items'];
+}
+
+// cart items animation
+const cartItemsAnimationTransform =  [
+    { transform: 'rotate(0px)' },
+    { transform: 'rotate(20deg)' },
+    { transition: 'ease-in-out' }
+];
+const cartItemsAnimationTiming = {
+    duration: 1000,
+    iterations: 1,
+}
+const cartItemsAnimation = () => {
+    document.getElementById('cart-items').animate(cartItemsAnimationTransform, cartItemsAnimationTiming);
+}
+
+// wishlist animation
+const wishlistAnimationTransform = [
+    { transform: 'scale(1)' },
+    { transform: 'scale(1.2)'},
+    { transition: 'ease-in-out' }
+]
+const wishlistIconAnimationTiming = {
+    duration: 1000,
+    iterations: 1,
+}
+
+// update cart and wishlist
+const addToCart = (product_id, price) => {
+    if(cart[product_id] == undefined) {
+        cart[product_id] = {'id': product_id, 'quantity': 1, 'price': price}; 
+    }else {
+        cart[product_id]['quantity'] += 1;
+    }
+    updateCart();
+    getCartItemsAndTotal();
+    cartItemsAnimation();
 }
 
 if(document.querySelector('.update-btn')) {
     const updateBtns = document.querySelectorAll('.update-btn');
     updateBtns.forEach((btn) => {
         btn.addEventListener('click', () => {
-            let product_id = btn.dataset.product;
-            let action = btn.dataset.action;
+            const product_id = btn.dataset.product;
+            const price = btn.dataset.price;
+            const action = btn.dataset.action;
 
-            updateCartAndWishlist(product_id, action);
+            switch(action) {
+                case 'add-to-cart':
+                    addToCart(product_id, price);
+                    break;
+                case 'remove-from-cart':
+                    cart[product_id]['quantity'] -= 1;
+                    updateCart();
+                    getCartItemsAndTotal();
+                    cartItemsAnimation();
+                    // fully remove from cart cookie
+                    if(cart[product_id]['quantity'] <= 0) {
+                        delete cart[product_id];
+                        updateCart();
+                        window.location.reload();
+                    }
+                    break;
+                case 'add-to-wishlist':
+                    if(wishlist[product_id] == undefined) {
+                        wishlist[product_id] = {'quantity': 1, 'price': price};
+                    }
+                    document.getElementById('wishlist-icon').animate(wishlistAnimationTransform, wishlistIconAnimationTiming);
+                    updateWishlist();
+                    break;
+                case 'add-to-cart-from-wishlist':
+                    addToCart(product_id, price);
+                    delete wishlist[product_id];
+                    updateWishlist();
+                    window.location.reload();
+                    break;
+                case 'remove-from-wishlist':
+                    delete wishlist[product_id];
+                    updateWishlist();
+                    window.location.reload();
+                    break;
+            }
         });
     });
 }
+
+// show # of cart items in header on all pages
+window.addEventListener('load', () => {
+    getCartItemsAndTotal();
+});
 
 
 // ALERT MESSAGES

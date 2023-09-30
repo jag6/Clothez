@@ -11,7 +11,6 @@ from django.contrib.auth.hashers import make_password
 
 from  store.models import *
 from . forms import * 
-from store.utils import cartData
 from .tokens import account_activation_token
 
 def signUp(request):
@@ -19,10 +18,6 @@ def signUp(request):
 	if request.user.is_authenticated:
 		return redirect('my-account')
 	
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
-
 	# metadata
 	title = 'Create a New Account'
 	description = 'Sign up and save today!'
@@ -32,8 +27,7 @@ def signUp(request):
 		form = SignUpForm()
 
 		context = {
-			'form': form, 
-			'cart_items': cart_items, 
+			'form': form,  
 			'title': title,
 			'description': description,
 			'url': url
@@ -44,8 +38,7 @@ def signUp(request):
 		form = SignUpForm(request.POST)
 
 		context = {
-			'form': form, 
-			'cart_items': cart_items, 
+			'form': form,  
 			'title': title,
 			'description': description,
 			'url': url
@@ -105,10 +98,6 @@ def signIn(request):
 	if request.user.is_authenticated:
 		return redirect('my-account')
 	
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
-
 	# metadata
 	title = 'Welcome Back'
 	description = 'Sign in and do what you came to do.'
@@ -118,8 +107,7 @@ def signIn(request):
 		form = SignInForm()
 
 		context = {
-			'form': form, 
-			'cart_items': cart_items, 
+			'form': form,  
 			'title': title,
 			'description': description,
 			'url': url
@@ -130,8 +118,7 @@ def signIn(request):
 		form = SignInForm(request.POST)
 
 		context = {
-			'form': form, 
-			'cart_items': cart_items, 
+			'form': form,  
 			'title': title,
 			'description': description,
 			'url': url
@@ -153,10 +140,6 @@ def myAccount(request):
 	if not request.user.is_authenticated:
 		return redirect('sign-in')
 	
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
-
 	# orders
 	orders = Order.objects.order_by('-date_ordered').filter(customer=request.user.customer)
 
@@ -169,8 +152,7 @@ def myAccount(request):
 		form = ChangePasswordForm()
 
 		context = {
-			'form': form, 
-			'cart_items': cart_items, 
+			'form': form,  
 			'orders': orders,
 			'title': title,
 			'description': description,
@@ -182,8 +164,7 @@ def myAccount(request):
 		form = ChangePasswordForm(request.POST)
 
 		context = {
-			'form': form, 
-			'cart_items': cart_items, 
+			'form': form,  
 			'orders': orders,
 			'title': title,
 			'description': description,
@@ -213,25 +194,16 @@ def myOrder(request, order_id):
 	description = 'View your order details.'
 	url = '/my-account/order'
 
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
-
 	context = {
 		'order': order,
 		'title': title,
 		'description': description,
-		'url': url,
-		'cart_items': cart_items
+		'url': url
 	}
 
 	return render(request, 'accounts/my-order.html', context)
 
 def forgotPassword(request):
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
-
 	# metadata
 	title = 'Forgot Your Password?'
 	description = 'Enter in your email in order to reset your password.'
@@ -241,8 +213,7 @@ def forgotPassword(request):
 		form = ForgotPasswordForm()
 
 		context = {
-			'form': form,
-			'cart_items': cart_items, 
+			'form': form, 
 			'title': title,
 			'description': description,
 			'url': url
@@ -253,8 +224,7 @@ def forgotPassword(request):
 		form = ForgotPasswordForm(request.POST)
 
 		context = {
-			'form': form,
-			'cart_items': cart_items, 
+			'form': form, 
 			'title': title,
 			'description': description,
 			'url': url
@@ -292,23 +262,14 @@ def checkEmail(request):
 	description = 'Check your email in order to proceed with the reset password process.'
 	url = '/check-email'
 
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
-
 	context = {
 		'title': title,
 		'description': description,
-		'url': url,
-		'cart_items': cart_items
+		'url': url
 	}
 	return render(request, 'accounts/check-email.html', context)
 		
 def resetPassword(request, uidb64, token):
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
-
 	# metadata
 	title = 'Reset Password'
 	description = 'Enter in a new password then proceed to the sign-in page.'
@@ -328,7 +289,6 @@ def resetPassword(request, uidb64, token):
 
 			context = {
 				'form': form,
-				'cart_items': cart_items, 
 				'title': title,
 				'description': description,
 				'url': url

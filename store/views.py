@@ -18,10 +18,6 @@ def index(request):
 	# banner
 	banner = Banner.objects.get(name = 'Home Banner')
 
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
-
 	# products
 	latest_products = Product.objects.order_by('created_at').filter(is_published=True)[:6]
 	mens_products = Product.objects.order_by('category', 'name').filter(gender='Men\'s', is_published=True)
@@ -32,7 +28,6 @@ def index(request):
 		'title': title,
 		'description': description,
 		'banner': banner,
-		'cart_items': cart_items,
 		'latest_products': latest_products, 
 		'mens_products': mens_products,
 		'womens_products': womens_products,
@@ -45,10 +40,6 @@ def search(request):
 	title = 'Search'
 	description = 'Search for the product you\'re looking for.'
 	url = '/search'
-
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
 
 	#search info
 	queryset_list = Product.objects.order_by('category', 'name').filter(is_published=True)
@@ -89,7 +80,6 @@ def search(request):
 		'title': title,
 		'description': description,
 		'url': url,
-		'cart_items': cart_items,
 		'products': queryset_list,
 		'values': request.GET,
 		'category_options': category_options,
@@ -101,10 +91,6 @@ def search(request):
 def product(request, product_id):
 	# metadata
 	css = 'product'
-
-	# cart
-	data = cartData(request)
-	cart_items = data['cart_items']
 
 	# product info
 	product = get_object_or_404(Product, pk=product_id)
@@ -125,7 +111,6 @@ def product(request, product_id):
 			context = {
 				'form': form, 
 				'css': css, 
-				'cart_items': cart_items, 
 				'product': product, 
 				'order_item': order_item, 
 				'left_review': left_review, 
@@ -135,7 +120,6 @@ def product(request, product_id):
 		else:
 			context = {
 				'css': css,
-				'cart_items': cart_items,
 				'product': product,
 				'reviews': reviews
 			}
@@ -154,7 +138,6 @@ def product(request, product_id):
 			context = {
 				'form': form, 
 				'css': css, 
-				'cart_items': cart_items, 
 				'product': product, 
 				'order_item': order_item, 
 				'left_review': left_review, 
@@ -179,10 +162,6 @@ def wishlist(request):
 	url = '/wishlist'
 	css = 'cart'
 
-	# cart
-	cart_data = cartData(request)
-	cart_items = cart_data['cart_items']
-
 	# wishlist
 	wishlist_data = wishlistData(request)
 	wishlist_items = wishlist_data['wishlist_items']
@@ -194,7 +173,6 @@ def wishlist(request):
 		'description': description,
 		'url': url,
 		'css': css,
-		'cart_items': cart_items,
 		'wishlist_items': wishlist_items,
 		'order': order,
 		'items': items

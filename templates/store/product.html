@@ -51,11 +51,11 @@
                 </div>
                 {% if product.count_in_stock > 0 or product.digital == True %}
                     <div>
-                        <button data-product="{{product.id}}" data-action="add-to-cart" class="fw primary bold cart-btn update-btn">ADD TO CART</button>
+                        <button type="button" data-product="{{product.id}}" data-price="{{product.price}}" data-action="add-to-cart" class="fw primary bold cart-btn update-btn">ADD TO CART</button>
                     </div>
                 {% endif %}
                 <div>
-                    <button data-product="{{product.id}}" data-action="add-to-wishlist" class="fw bold wishlist-btn update-btn">ADD TO WISHLIST</button>
+                    <button type="button" data-product="{{product.id}}" data-price="{{product.price}}" data-action="add-to-wishlist" class="fw bold wishlist-btn update-btn">ADD TO WISHLIST</button>
                 </div>
             </div>
         </section>

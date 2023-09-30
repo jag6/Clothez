@@ -42,8 +42,9 @@
     width: 100px; 
 }
 
-.cart-action { 
-    height: 11.5rem; width: 25%; 
+.cart-action {
+    display: flex; flex-direction: column; align-self: flex-start;
+    width: 25%; 
     background-color: #e5e5e5; 
     border-radius: 20px; 
     padding: 1rem 2%; 
@@ -66,7 +67,7 @@
 .wishlist-container .cart-list { width: 100%; }
 .wishlist-btns div { margin: 0 4px; }
 .wishlist-btns div:nth-child(1) button { background-color: #FCCA3F; }
-.wishlist-btns div:nth-child(2) button { background-color: #666; }
+.wishlist-btns div:nth-child(2) button { background-color: #999; }
 @media only screen and (max-width: 900px) {    
     .cart-list { margin-right: 0%; }
     .cart-list, .cart-action { width: 100%; }  

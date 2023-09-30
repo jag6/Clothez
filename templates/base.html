@@ -75,16 +75,16 @@
                     {% endif %}
                     <li>
                         <a href="{% url 'wishlist' %}">
-                            <div class='header-cf'>
+                            <div id="wishlist-icon" class='header-cf'>
                                 <i class="fa-solid fa-heart"></i>
                             </div>
                         </a>
                     </li>
-                    <li>
+                    <li class="ul-cart">
                         <a href="{% url 'cart' %}">
                             <div class='header-cf'>
                                 <i class="fa-solid fa-cart-shopping"></i>
-                                <p id="cart-total">{{cart_items}}</p>
+                                <p id="cart-items"></p>
                             </div>
                         </a>
                     </li>
