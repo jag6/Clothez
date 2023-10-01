@@ -12,7 +12,7 @@ const getToken = (name) => {
         }
     }
     return cookieValue;
-}
+};
 let csrftoken = getToken('csrftoken');
 
 
@@ -27,13 +27,13 @@ const getCookie = (name) => {
         }
     }
     return null;
-}
+};
 
 // cart cookie
 let cart = JSON.parse(getCookie('cart'));
 const updateCart = () => {
     document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/;secure;http-only;samesite=lax;';
-}
+};
 if (cart == undefined) {
     cart = {};
     updateCart();
@@ -43,15 +43,18 @@ if (cart == undefined) {
 let wishlist = JSON.parse(getCookie('wishlist'));
 const updateWishlist = () => {
     document.cookie = 'wishlist=' + JSON.stringify(wishlist) + ';domain=;path=/;secure;http-only;samesite=lax';
-}
+};
 if (wishlist == undefined) {
     wishlist = {};
     updateWishlist();   
 }
 
+// purposely made global for use in multiple functions
+const cartItems = document.getElementById('cart-items');
+
 const getCartItemsAndTotal = () => {
     let cart_total;
-	let order = {'cart_total': 0, 'cart_items': 0}
+	let order = {'cart_total': 0, 'cart_items': 0};
     let items = [];
 
     for(let i in cart) {
@@ -76,7 +79,7 @@ const getCartItemsAndTotal = () => {
                     `;
                     const iqChildren = document.querySelectorAll('.iq-child');
                     iqChildren.forEach((child) => {
-                        if(child.dataset.product != child.parentNode.dataset.product) {
+                        if(child.dataset.product !== child.parentNode.dataset.product) {
                             child.remove();
                         }
                     });
@@ -86,40 +89,45 @@ const getCartItemsAndTotal = () => {
     }
 
     // show total $ of cart items
-    let cartTotal = document.getElementById('cart-total')
+    const cartTotal = document.getElementById('cart-total');
     if(cartTotal) {
-        cartTotal.innerText = 'Total: $' + order['cart_total'].toFixed(2);;
+        cartTotal.innerText = 'Total: $' + order['cart_total'].toFixed(2);
     }
 
     // show # of cart items
-    let cartItems = document.getElementById('cart-items');
-    cartItems.innerText = order['cart_items'];
-}
+    if(order['cart_items'] === 0) {
+        cartItems.innerText = '';
+    }else {
+        cartItems.innerText = order['cart_items'];
+    }
+};
 
 // cart items animation
-const cartItemsAnimationTransform =  [
+const cartItemsAnimationAdd =  [
     { transform: 'rotate(0px)' },
-    { transform: 'rotate(20deg)' },
+    { transform: 'rotate(15deg)' },
+    { transition: 'ease-in-out' }
+];
+const cartItemsAnimationRemove =  [
+    { transform: 'rotate(0px)' },
+    { transform: 'rotate(-15deg)' },
     { transition: 'ease-in-out' }
 ];
 const cartItemsAnimationTiming = {
     duration: 1000,
     iterations: 1,
-}
-const cartItemsAnimation = () => {
-    document.getElementById('cart-items').animate(cartItemsAnimationTransform, cartItemsAnimationTiming);
-}
+};
 
 // wishlist animation
 const wishlistAnimationTransform = [
     { transform: 'scale(1)' },
     { transform: 'scale(1.2)'},
     { transition: 'ease-in-out' }
-]
+];
 const wishlistIconAnimationTiming = {
     duration: 1000,
     iterations: 1,
-}
+};
 
 // update cart and wishlist
 const addToCart = (product_id, price) => {
@@ -130,8 +138,8 @@ const addToCart = (product_id, price) => {
     }
     updateCart();
     getCartItemsAndTotal();
-    cartItemsAnimation();
-}
+    cartItems.animate(cartItemsAnimationAdd, cartItemsAnimationTiming);
+};
 
 if(document.querySelector('.update-btn')) {
     const updateBtns = document.querySelectorAll('.update-btn');
@@ -149,7 +157,7 @@ if(document.querySelector('.update-btn')) {
                     cart[product_id]['quantity'] -= 1;
                     updateCart();
                     getCartItemsAndTotal();
-                    cartItemsAnimation();
+                    cartItems.animate(cartItemsAnimationRemove, cartItemsAnimationTiming);
                     // fully remove from cart cookie
                     if(cart[product_id]['quantity'] <= 0) {
                         delete cart[product_id];
