@@ -1,4 +1,4 @@
-# eCommerce Template
+# Clothez
 
 ## Description
 This is an eCommerce template that allows for both signed-in and guest add to cart and checkout functionality. Checkout payment is made through PayPal, and empties the cart upon a successful transaction.
